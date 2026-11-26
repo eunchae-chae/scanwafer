@@ -938,7 +938,7 @@
     <h3 style="margin-top:28px;font-size:16px;margin-bottom:10px">혼동행렬 (행: 정답, 열: 예측)</h3>
     <div style="overflow-x:auto"><table class="cm tbl-sm" id="wmCm"></table></div>
     <div class="src-box" style="margin-top:22px"><b>데이터 출처와 처리</b>
-      <p>WM-811K: 반도체 공장 실제 웨이퍼 맵 811,457장 중 전문가가 라벨을 붙인 172,950장. Wu, Ming-Ju, Jyh-Shing R. Jang, Jui-Long Chen, "Wafer Map Failure Pattern Recognition and Similarity Ranking for Large-Scale Data Sets," IEEE Transactions on Semiconductor Manufacturing 28(1), 2015. · <a href="https://www.kaggle.com/datasets/qingyi/wm811k-wafer-map" target="_blank" rel="noopener">Kaggle (CC0: Public Domain)</a></p>
+      <p>WM-811K: 반도체 공장 실제 웨이퍼 맵 811,457장(논문 기준) 중 전문가가 라벨을 붙인 172,950장(Kaggle 파일 집계, 후속 연구에서도 같은 수치). Wu, Ming-Ju, Jyh-Shing R. Jang, Jui-Long Chen, "Wafer Map Failure Pattern Recognition and Similarity Ranking for Large-Scale Data Sets," IEEE Transactions on Semiconductor Manufacturing 28(1), 2015. · <a href="https://www.kaggle.com/datasets/qingyi/wm811k-wafer-map" target="_blank" rel="noopener">Kaggle (CC0: Public Domain)</a></p>
       <p>9종 중 Near-full은 149장, Donut은 555장뿐이라 전부 쓰고, 나머지는 클래스당 700장을 무작위로 뽑았습니다. 맵 크기가 제각각(최대 300×202)이라 32×32로 줄였고(칸마다 불량이 하나라도 있으면 불량), 학습 70% · 검증 15% · 테스트 15%로 나눴습니다. 위 "실제 웨이퍼 맵 예시"는 테스트 쪽에서 뽑은 것입니다. 논문의 어떤 내용을 쓰고 어떤 것은 쓰지 않았는지는 <a href="#/data/wmpaper" style="color:var(--blue-d);font-weight:700">데이터·모델 &gt; WM-811K 논문 적용</a>에 정리했습니다.</p>
     </div>
   </div>
@@ -1012,13 +1012,15 @@
 <h3 style="margin-top:44px;font-size:20px">실제 데이터: WM-811K 웨이퍼 맵 (논문에서 가져온 데이터)</h3>
     <p class="lead" style="font-size:15px;margin-bottom:16px">위 합성 데이터와 별도로, 논문(Wu · Jang · Chen, 2015)에서 공개한 <b>실제 반도체 공장 데이터 WM-811K</b>로 웨이퍼 맵 분류 모델을 학습했습니다. 사진이 아니라 "웨이퍼를 칸(다이)으로 나눠 불량 칸을 찍은 지도"라서 사진 분석 모델과는 다른 기능입니다. 논문의 방법을 어떻게 썼는지는 <a href="#/data/wmpaper" style="color:var(--blue-d);font-weight:700">WM-811K 논문 적용</a>, 시연과 성능은 <a href="#/demo/wafermap" style="color:var(--blue-d);font-weight:700">웨이퍼 맵 분석</a>에 있습니다.</p>
     <div class="two">
-      <div class="card fact"><span class="label fact">논문 원문 · 사실</span>
+      <div class="card fact"><span class="label fact">사실 · 출처별 구분</span>
         <h3>WM-811K는 어떤 데이터인가요?</h3>
         <ul>
-          <li>실제 반도체 공장 <b>46,293개 로트</b>에서 모은 웨이퍼 맵 <b>811,457장</b>. 이 중 분야 전문가가 유형을 라벨로 붙인 것은 약 20%(172,950장)이고, 실제 불량 패턴이 있는 것은 25,519장입니다.</li>
-          <li>출처: Wu, Jang, Chen, "Wafer Map Failure Pattern Recognition and Similarity Ranking for Large-Scale Data Sets," <i>IEEE Transactions on Semiconductor Manufacturing</i> 28(1), 2015. Kaggle에서 CC0(퍼블릭 도메인)로 공개되어 있습니다. <a href="https://www.kaggle.com/datasets/qingyi/wm811k-wafer-map" target="_blank" rel="noopener" style="color:var(--blue-d)">Kaggle 링크</a></li>
-          <li>유형은 9종이며 불균형이 큽니다. Edge-Ring은 9,680장, Near-full은 149장입니다.</li>
-          <li>맵 크기가 제각각(최대 300×202)이라 입력을 맞추는 전처리가 필요합니다.</li>
+          <li><b>[논문]</b> 실제 반도체 공장 <b>46,293개 로트</b>에서 모은 웨이퍼 맵 <b>811,457장</b>. 이 중 약 20%에 분야 전문가가 유형 라벨을 붙였습니다. (논문 VI-A절. 이름의 811K는 811,457장에서 온 것입니다.)</li>
+          <li><b>[외부 정리]</b> 라벨이 있는 것은 <b>172,950장</b>, 그중 실제 불량 패턴이 있는 것은 25,519장, 나머지 147,431장은 none입니다. Kaggle 파일을 집계한 후속 연구와 MATLAB 문서의 수치이며, 논문 본문(학습 54,356장 + 테스트 118,595장)과는 1장 차이가 납니다.</li>
+          <li><b>[외부 정리]</b> 유형은 9종이며 불균형이 큽니다. Edge-Ring 9,680장, Near-full 149장, Donut 555장 등 (Springer 2024 논문 집계와 우리가 파일을 처리하며 확인한 값이 일치).</li>
+          <li><b>[논문]</b> 맵마다 칸(다이) 수가 크게 달라서(Fig. 9) 입력을 맞추는 전처리가 필요합니다. <b>[우리가 확인]</b> 받은 파일에서 가장 큰 맵은 300×202였습니다.</li>
+          <li><b>[Kaggle 표기]</b> 공개 라이선스 CC0(퍼블릭 도메인). Kaggle 설명의 로트 수는 46,393으로 적혀 있지만 논문 본문은 46,293이라서 논문 값을 썼습니다.</li>
+          <li>논문: Wu, Jang, Chen, <i>IEEE Transactions on Semiconductor Manufacturing</i> 28(1), 2015. <a href="https://www.kaggle.com/datasets/qingyi/wm811k-wafer-map" target="_blank" rel="noopener" style="color:var(--blue-d)">Kaggle 데이터</a></li>
         </ul></div>
       <div class="card hyp"><span class="label hyp">우리가 쓴 방식 · 팀이 정한 것</span>
         <h3>어떻게 가져와 가공했나요?</h3>
@@ -1251,7 +1253,7 @@
       <h3>출처</h3>
       <p>㈜아이코어 공식 사이트: <a href="http://icorecorp.com" target="_blank" rel="noopener">icorecorp.com</a></p>
       <p style="margin-top:8px">참고 이미지: 칩 표면 불량 유형 예시는 <a href="https://www.minder-semicon.com/ko/automatic-optical-inspect-aoi-wafer-2d-defect-inspection" target="_blank" rel="noopener">Guangzhou Minder-Hightech</a>의 제품 소개 페이지에서 가져왔습니다. 웨이퍼 전체 검사 예시는 ChatGPT(OpenAI)를 통해 얻은 이미지이며 원 출처는 확인하지 못했습니다.</p>
-      <p style="margin-top:8px">참고 자료: <a href="https://aiegg-travel.tistory.com/entry/Kaggle-WM-Dataset%EC%9C%BC%EB%A1%9C-Wafer-Map-Defect-Pattern-%EB%B6%84%EB%A5%98-%EC%8B%A4%EC%8A%B5" target="_blank" rel="noopener">Kaggle WM 데이터셋으로 Wafer Map Defect Pattern 분류 실습 (톡발이, CC BY 4.0)</a> · <a href="https://www.kaggle.com/datasets/qingyi/wm811k-wafer-map" target="_blank" rel="noopener">WM-811K wafer map (Kaggle)</a></p>
+      <p style="margin-top:8px">참고 자료: <a href="http://mirlab.org/jang/research/publication/myPaper/Wafer%20Map%20Failure%20Pattern%20Recognition%20and%20Similarity%20Ranking%20for%20Large-scale%20Datasets.pdf" target="_blank" rel="noopener">Wu·Jang·Chen (2015) WM-811K 논문</a> · <a href="https://www.kaggle.com/datasets/qingyi/wm811k-wafer-map" target="_blank" rel="noopener">WM-811K wafer map (Kaggle)</a> · 데이터 수 집계 확인: <a href="https://www.mdpi.com/2079-9292/13/7/1360" target="_blank" rel="noopener">MDPI Electronics 13(7), 2024</a>, <a href="https://link.springer.com/article/10.1007/s10845-024-02390-7" target="_blank" rel="noopener">J. Intell. Manuf. 2024</a> · 신뢰도 향상 논문 목록은 데이터·모델 &gt; 신뢰도 향상 참고 문헌</p>
       <p style="margin-top:8px">이 사이트의 기업 정보는 위 공식 사이트 기준이며, 아이코어 제품 목록은 해당 사이트 메인 페이지 기준입니다. 샘플 분류 결과와 기대 효과 수치는 모두 데모·가정용입니다.</p>
     </div>
   </div>
