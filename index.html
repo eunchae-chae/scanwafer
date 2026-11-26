@@ -520,7 +520,7 @@
   <div class="wrap">
     <span class="tag">DEMO</span>
     <h2>분류 데모</h2>
-    <p class="lead">두 가지로 체험할 수 있습니다. 이미지는 <b>한 장도, 수백~수천 장도</b> 올릴 수 있습니다. 여러 장을 한꺼번에 올리면 이 페이지 아래의 <a href="#/demo/filter" style="color:var(--blue-d);font-weight:700">대량 분류</a> 구역에서 자동 분석으로 제외할 것과 사람이 정밀하게 볼 것을 나눠 줍니다. ① 합성 테스트 이미지 12장 중 하나를 선택하면 <b>우리가 학습한 모델이 실제로 계산한 결과</b>가 나오고(불량 위치 표시와 확대 이미지도 함께 보여 줍니다), ② 내 이미지를 <b>카메라로 찍거나 앨범·파일에서 골라</b> 올리면 같은 모델이 분석하고, 불량 위치와 분석 과정을 단계별로 보여 줍니다. 정답을 알려 주면 내 데이터로 쌓입니다. 단, 합성 이미지로만 학습했기 때문에 실제 사진에서는 <b>판정 보류</b>가 나올 수 있습니다.</p>
+    <p class="lead">두 가지로 체험할 수 있습니다. 이미지는 <b>한 장도, 수백~수천 장도</b> 올릴 수 있습니다. 여러 장을 한꺼번에 올리면 이 페이지 아래의 <a href="#/demo/filter" style="color:var(--blue-d);font-weight:700">대량 분류</a> 구역에서 자동 분석으로 제외할 것과 사람이 정밀하게 볼 것을 나눠 줍니다. ① 합성 테스트 이미지 12장 중 하나를 선택하면 <b>우리가 학습한 모델이 실제로 계산한 결과</b>가 나오고(불량 위치 표시와 확대 이미지도 함께 보여 줍니다), ② 내 이미지를 <b>카메라로 찍거나 앨범·파일에서 골라</b> 올리면 같은 모델이 분석하고, 불량 위치와 분석 과정을 단계별로 보여 줍니다. 단, 합성 이미지로만 학습했기 때문에 실제 사진에서는 <b>판정 보류</b>가 나올 수 있습니다.</p>
     <div class="guide" id="guide" aria-label="클래스 구분 방법"></div>
     <div class="demo">
       <div>
@@ -944,37 +944,6 @@
   </div>
 </section>
 
-<section id="mydata">
-  <div class="wrap">
-    <span class="tag">MY DATA</span>
-    <h2>내 데이터로 정밀해지는 모델</h2>
-    <p class="lead">분류 체험에서 이미지를 올리고 <b>정답을 알려 주면</b> 그 정보가 데이터로 쌓입니다. 쌓인 데이터로 모델을 보정하면 내가 올린 이미지 유형에 더 잘 맞게 됩니다. 저장되는 것은 이미지가 아니라 <b>숫자 특징 19개</b>입니다. 기본적으로 이 브라우저에만 저장되고, <b>공유에 동의한 경우에만</b> 익명으로 팀의 데이터 저장소에 보냅니다.</p>
-    <div class="summary" id="udStats"></div>
-    <div class="btnrow">
-      <button class="btn" id="udAdapt" type="button">내 데이터로 모델 보정하기</button>
-      <label class="chk"><input type="checkbox" id="udUse"> 보정한 모델로 분석하기</label>
-      <button class="btn sec" id="udReset" type="button">원래 모델로 되돌리기</button>
-      <button class="btn sec" id="udExport" type="button">내 데이터 내보내기 (JSON)</button>
-      <button class="btn sec" id="udClear" type="button">모두 삭제</button>
-    </div>
-    <div class="card sharebox">
-      <h3>데이터 공유 (선택)</h3>
-      <p>동의하면 내가 알려 준 정답과 숫자 특징이 <b>익명으로 팀의 데이터 저장소(구글 설문의 응답 시트)</b>에 모입니다. 팀이 검수한 뒤 모델을 다시 학습하는 데 쓰입니다.</p>
-      <ul>
-        <li><b>보내는 것:</b> 정답(정상·스크래치·오염 중 하나), 그때 모델의 판단, 숫자 특징 19개, 입력 방법(카메라·앨범·파일), 앱 버전. 시각은 구글 설문이 자동으로 기록합니다.</li>
-        <li><b>보내지 않는 것:</b> 이미지, 파일 이름, 이름·이메일 등 개인을 알 수 있는 정보. 숫자 특징 19개만으로는 이미지를 복원할 수 없습니다.</li>
-        <li><b>주의:</b> 익명으로 보내기 때문에 보낸 뒤에는 내 데이터만 골라서 지울 수 없습니다. 동의하지 않으면 아무것도 보내지 않습니다.</li>
-      </ul>
-      <div class="btnrow" style="margin:12px 0 4px"><label class="chk"><input type="checkbox" id="udShareAuto"> 정답을 알려 줄 때마다 자동으로 익명 공유</label><button class="btn sec" id="udShareAll" type="button">아직 공유하지 않은 데이터 모두 공유</button></div>
-      <p id="udShareInfo" style="margin:4px 0 0"></p><p id="udShareMsg" style="margin:4px 0 0;color:var(--muted)"></p>
-    </div>
-    <div id="adaptResult" style="margin-top:20px"></div>
-    <h3 style="margin:26px 0 10px;font-size:18px">최근에 알려 준 정답</h3>
-    <div style="overflow-x:auto"><table id="udTable" class="tbl-sm"></table></div>
-    <p class="note">※ 보정은 원래 모델에서 출발해, 내 데이터와 기존 학습 데이터 일부(150장)를 함께 복습하면서 가중치를 조금만 바꾸는 방식입니다. 기존 성능이 떨어지지 않았는지 합성 테스트 이미지 225장으로 바로 확인합니다. 공유에 동의한 데이터는 팀의 시트에 모이지만, 모델은 자동으로 바뀌지 않고 팀이 검수·재학습한 뒤 사이트에 반영해야 모두에게 적용됩니다. ("데이터가 쌓이면" 탭 참고)</p>
-  </div>
-</section>
-
 <section id="dataset">
   <div class="wrap">
     <span class="tag">DATASET</span>
@@ -1159,32 +1128,7 @@
         </ul></div>
     </div>
     <h3 style="margin-top:36px;font-size:20px">사용자가 올릴 때마다 정밀해지는 순환</h3>
-    <div class="loop">
-      <div class="st done"><span class="tagx">구현</span><b>1. 이미지 업로드</b>분류 체험에서 이미지를 올립니다.</div>
-      <div class="st done"><span class="tagx">구현</span><b>2. 자동 분석</b>불량 위치, 분류, 신뢰도를 계산하고, 확실한 이미지는 자동 분석 완료로 제외합니다.</div>
-      <div class="st done"><span class="tagx">구현</span><b>3. 정답 확인</b>사람이 정밀하게 측정한 결과를 정답으로 입력합니다. 자동 분석으로 제외되지 않고 남은 이미지가 대상이라, 사람의 수고가 가장 필요한 곳에만 쓰입니다.</div>
-      <div class="st done"><span class="tagx">구현</span><b>4. 데이터 저장</b>이미지 대신 특징 19개와 정답을 브라우저에 저장합니다.</div>
-      <div class="st done"><span class="tagx">구현</span><b>5. 모델 보정</b>내 데이터와 기존 데이터를 함께 복습해 내 브라우저의 모델을 조금 바꿉니다.</div>
-      <div class="st done"><span class="tagx">구현</span><b>6. 성능 확인</b>합성 테스트 225장으로 기존 성능이 유지되는지 바로 확인합니다.</div>
-      <div class="st done"><span class="tagx">구현</span><b>7. 여러 사용자 데이터 취합</b>공유에 동의한 정답·특징이 팀의 구글 시트에 익명으로 모입니다.</div>
-      <div class="st todo"><span class="tagx">계획</span><b>8. 검수와 재학습·배포</b>팀이 시트의 잘못된 정답과 중복을 걸러내고 재학습해 새 모델 파일을 사이트에 반영합니다. 아직 자동이 아니라 사람이 합니다.</div>
-    </div>
-    <div class="two" style="margin-top:20px">
-      <div class="card hyp"><span class="label hyp">정직하게 말씀드리면</span>
-        <ul>
-          <li>공유에 동의한 데이터는 팀의 구글 시트에 쌓이지만, <b>모델이 저절로 바뀌지는 않습니다.</b> 팀이 검수하고 재학습한 새 모델을 사이트에 올려야 모든 사용자에게 적용됩니다.</li>
-          <li>"내 데이터로 보정"은 그 사람의 브라우저에서만 적용되는 개인 보정입니다. 다른 사람의 모델에는 영향을 주지 않습니다.</li>
-          <li>모인 데이터의 품질(잘못된 정답, 장난으로 보낸 데이터)은 검수 전에는 알 수 없고, 합성 이미지로 학습한 모델이 낸 특징이므로 실제 사진 데이터가 쌓이는지도 지켜봐야 합니다.</li>
-        </ul></div>
-      <div class="card fact"><span class="label fact">데이터를 모을 때의 원칙 (설계)</span>
-        <ul>
-          <li><b>이미지 대신 숫자 특징만 저장</b>하고, <b>동의한 경우에만</b> 보냅니다. 검사 이미지 속 기밀이 새지 않도록 하기 위해서입니다.</li>
-          <li><b>모델이 헷갈린 이미지부터</b> 정답을 요청합니다. 같은 노력으로 더 많이 배울 수 있습니다.</li>
-          <li><b>잘못된 정답 방지</b>: 시트에 모인 데이터는 검수를 거치기 전에는 학습에 쓰지 않고, 재학습 뒤에는 기존 테스트 성능을 반드시 확인합니다.</li>
-        </ul></div>
-    </div>
-  </div>
-</section>
+    undefined</section>
 
 <section id="gap">
   <div class="wrap">
@@ -1505,7 +1449,7 @@ function getUD(){try{return JSON.parse(LS.get('scanwafer_userdata')||'[]')}catch
 function setUD(a){return LS.set('scanwafer_userdata',JSON.stringify(a))}
 function loadAdapted(){try{return JSON.parse(LS.get('scanwafer_model_adapted')||'null')}catch(e){return null}}
 function useAdapted(){return LS.get('scanwafer_use_adapted')==='1'}
-function activeModel(){const a=loadAdapted();return(a&&useAdapted())?a.model:MODEL}
+function activeModel(){return MODEL}
 function accOn(model,items){let ok=0;items.forEach(([y,f])=>{const p=predictFeatures(f,model).p;let b=0;p.forEach((v,i)=>{if(v>p[b])b=i});if(b===y)ok++});return items.length?ok/items.length:0}
 function fineTune(base,data,epochs,lr,lam){
   const m=JSON.parse(JSON.stringify(base)),o=JSON.parse(JSON.stringify(base)),H=m.b1.length,D=m.W1[0].length,C=3;
@@ -1629,18 +1573,6 @@ function buildGuide(){
     f.appendChild(c);f.appendChild(cap);g.appendChild(f);
   });
 }
-// ---------- 데이터 공유 (동의한 경우에만, 팀의 구글 설문으로 익명 전송) ----------
-const FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSf_W1mSfPc4CPRWODXQyUH_4F-b6E_sLnPfug3NMpUpp0whsA/formResponse';
-const FORM_F={label:'entry.2054661164',pred:'entry.1109035155',feat:'entry.1526646646',src:'entry.1404462690',ver:'entry.861592304'};
-function shareOne(u){
-  const names=['정상','스크래치','오염'];
-  if(!(u.y>=0&&u.y<=2)||!Array.isArray(u.f)||u.f.length!==19||u.f.some(v=>!isFinite(v)))return Promise.resolve(false);
-  const b=new URLSearchParams();
-  b.set(FORM_F.label,names[u.y]);b.set(FORM_F.pred,u.pred<0?'판정 보류':names[u.pred]);b.set(FORM_F.feat,JSON.stringify(u.f));b.set(FORM_F.src,u.src||'');b.set(FORM_F.ver,'v1-synthetic-mlp');
-  return fetch(FORM_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:b.toString()}).then(()=>true).catch(()=>false);
-}
-async function shareUnshared(){const U=getUD();let n=0;for(let i=0;i<U.length;i++){if(!U[i].shared&&await shareOne(U[i])){U[i].shared=true;n++}}setUD(U);return n}
-function shareConsent(){return LS.get('scanwafer_share')==='1'}
 // ---------- 분석 과정 보기 ----------
 function autoBoxes(dbg){
   const k=600/FN;
@@ -1662,51 +1594,6 @@ function renderProcess(r){
   const idxs=[2,5,14,3,17,11],tb=document.getElementById('procFeat');
   tb.innerHTML='<tr><th>모델이 보는 단서 (19개 중 6개)</th><th>이 이미지의 값</th></tr>'+idxs.map(i=>'<tr><td>'+FEAT_NAMES[i]+'</td><td>'+(+r.f[i]).toFixed(2)+'</td></tr>').join('');
 }
-// ---------- 정답 알려주기 (내 데이터 쌓기) ----------
-function addUD(a,y,held){const U=getUD();let mx=0;a.p.forEach((v,i)=>{if(v>a.p[mx])mx=i});U.push({t:Date.now(),name:window.__lastName||'upload',src:window.__lastSource||'',y:y,f:a.f.map(v=>+v.toFixed(3)),pred:held?-1:mx,shared:false});return setUD(U)?U.length:-1}
-function renderFeedback(a,held){
-  const box=document.getElementById('feedbackBody');if(!box)return;
-  let mx=0;a.p.forEach((v,i)=>{if(v>a.p[mx])mx=i});
-  const low=held||a.p[mx]<TH;
-  box.innerHTML='<div class="fb"><b>이 결과가 맞나요? 정답을 알려 주세요</b><p>'+(low?'모델이 확신하지 못하는 이미지라서, 정답을 알려 주시면 학습에 특히 도움이 됩니다.':'정답을 알려 주시면 내 데이터로 쌓이고, 모델을 보정하는 데 쓰입니다.')+'</p><div class="fb-btns"><button type="button" data-y="0">정상</button><button type="button" data-y="1">스크래치</button><button type="button" data-y="2">오염</button></div><label class="fb-share"><input type="checkbox" id="fbShare"'+(shareConsent()?' checked':'')+'> 정답과 숫자 특징을 <b>익명으로 공유</b>해 모델 개선에 쓰이게 합니다</label><p class="fb-note">이미지와 파일 이름은 보내지 않습니다. 보내는 것은 정답, 모델 판단, 숫자 특징 19개, 입력 방법뿐입니다. 공유하지 않으면 이 브라우저에만 저장됩니다.</p></div>';
-  const cb=box.querySelector('#fbShare');cb.onchange=()=>{LS.set('scanwafer_share',cb.checked?'1':'0')};
-  box.querySelectorAll('.fb-btns button').forEach(b=>b.onclick=async()=>{
-    const n=addUD(a,+b.dataset.y,held);
-    if(n<0){box.innerHTML='<div class="fb"><b>저장하지 못했습니다.</b> 이 브라우저에서 저장 기능을 쓸 수 없는 상태입니다. (시크릿 모드이거나 저장이 차단된 경우)</div>';return}
-    let shareMsg='';
-    if(cb.checked){box.innerHTML='<div class="fb">저장했습니다. 공유하는 중...</div>';const k=await shareUnshared();shareMsg=k>0?' · <b>익명으로 공유했습니다</b>':' · 공유하지 못했습니다(네트워크 확인 후 "내 데이터·학습"에서 다시 보낼 수 있습니다)'}
-    box.innerHTML='<div class="fb done"><b>저장했습니다.</b> 정답: '+LABEL[['ok','scratch','contam'][+b.dataset.y]]+' · 지금까지 내 데이터 '+n+'장'+shareMsg+' · <a href="#/demo/mydata">내 데이터·학습 보기</a></div>';
-  });
-}
-// ---------- 내 데이터 · 학습 화면 ----------
-window.refreshMyData=function(){
-  const U=getUD(),st=document.getElementById('udStats');if(!st)return;
-  const cc=[0,0,0];U.forEach(u=>cc[u.y]++);
-  st.innerHTML='<div class="stat"><b>'+U.length+'</b><span>내가 모은 데이터</span></div><div class="stat"><b style="color:var(--ok)">'+cc[0]+'</b><span>정상</span></div><div class="stat"><b style="color:var(--scratch)">'+cc[1]+'</b><span>스크래치</span></div><div class="stat"><b style="color:var(--contam)">'+cc[2]+'</b><span>오염</span></div>';
-  const names=['정상','스크래치','오염'];
-  document.getElementById('udTable').innerHTML='<tr><th>시각</th><th>입력</th><th>내가 알려 준 정답</th><th>그때 모델 판단</th><th>공유</th></tr>'+(U.length?U.slice(-20).reverse().map(u=>{const d=new Date(u.t);const ok=u.pred===u.y;return '<tr><td>'+(d.getMonth()+1)+'/'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+'</td><td>'+(u.src||'-')+'</td><td>'+names[u.y]+'</td><td>'+(u.pred<0?'판정 보류':names[u.pred]+(ok?' (일치)':' <span style="color:#a5322a;font-weight:700">(불일치)</span>'))+'</td><td>'+(u.shared?'공유함':'-')+'</td></tr>'}).join(''):'<tr><td colspan="5" style="color:var(--muted)">아직 모은 데이터가 없습니다. 분류 체험에서 이미지를 올리고 정답을 알려 주세요.</td></tr>');
-  const sh=U.filter(u=>u.shared).length,si=document.getElementById('udShareInfo'),sa=document.getElementById('udShareAuto');if(si)si.innerHTML='공유한 데이터 <b>'+sh+'장</b> · 아직 공유하지 않은 데이터 <b>'+(U.length-sh)+'장</b>';if(sa)sa.checked=shareConsent();
-  const ad=loadAdapted(),ar=document.getElementById('adaptResult'),tg=document.getElementById('udUse');
-  tg.checked=useAdapted();tg.disabled=!ad;
-  if(ad){const pc=v=>(v*100).toFixed(1)+'%';const drop=ad.after.test<ad.before.test-0.03;
-    ar.innerHTML='<div class="card"><h3>보정 결과 <small style="font-weight:400;color:var(--muted)">(내 데이터 '+ad.n+'장으로 보정)</small></h3><table class="tbl-sm"><tr><th>평가 대상</th><th>보정 전</th><th>보정 후</th></tr><tr><td>내 데이터</td><td>'+pc(ad.before.user)+'</td><td><b>'+pc(ad.after.user)+'</b></td></tr><tr><td>합성 테스트 이미지 225장</td><td>'+pc(ad.before.test)+'</td><td><b>'+pc(ad.after.test)+'</b></td></tr></table>'+(drop?'<div class="flag warn">기존 합성 이미지에 대한 정확도가 3%p 넘게 떨어졌습니다. 정답을 잘못 알려 준 데이터가 섞였는지 확인하거나, 데이터를 더 모은 뒤 다시 보정해 보세요.</div>':'<div class="flag good">기존 성능을 유지하면서 내 데이터에 맞게 보정되었습니다.</div>')+'<p class="note">이 보정 모델은 이 브라우저에서 분석할 때만 쓰입니다. 위 "모델·성능" 탭의 수치는 원래 모델의 값입니다.</p></div>';
-  }else ar.innerHTML='';
-};
-(function(){
-  const $=id=>document.getElementById(id);
-  $('udAdapt').onclick=()=>{
-    const U=getUD(),ar=$('adaptResult');
-    if(!U.length){ar.innerHTML='<div class="flag warn">먼저 분류 체험에서 이미지를 올리고 정답을 알려 주세요.</div>';return}
-    ar.innerHTML='<div class="flag good">보정 중입니다...</div>';
-    setTimeout(()=>{adaptFromUserData();window.refreshMyData()},30);
-  };
-  $('udUse').onchange=e=>{LS.set('scanwafer_use_adapted',e.target.checked?'1':'0')};
-  $('udShareAuto').onchange=e=>{LS.set('scanwafer_share',e.target.checked?'1':'0')};
-  $('udShareAll').onclick=async()=>{const m=$('udShareMsg');m.textContent='공유하는 중...';const n=await shareUnshared();m.textContent=n>0?n+'장을 익명으로 공유했습니다. 감사합니다.':'새로 공유할 데이터가 없거나, 공유하지 못했습니다.';window.refreshMyData()};
-  $('udReset').onclick=()=>{LS.del('scanwafer_model_adapted');LS.set('scanwafer_use_adapted','0');window.refreshMyData()};
-  $('udExport').onclick=()=>{const U=getUD();const blob=new Blob([JSON.stringify({version:1,features:FEAT_NAMES,items:U},null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='scanwafer_my_data.json';a.click()};
-  $('udClear').onclick=()=>{if(confirm('내가 모은 데이터를 모두 삭제할까요?')){setUD([]);window.refreshMyData()}};
-})();
 function select(i){
   const s=SAMPLES[i],p=pred(s);
   document.querySelectorAll('.thumb').forEach(t=>t.classList.toggle('active',+t.dataset.i===i));
@@ -1818,7 +1705,7 @@ function analyzeSource(im,name,src,extra){
   const a=classifyImage(im,true);
   const held=showAnalysis(a);
   if(!held)drawBoxes(document.getElementById('viewCanvas'),autoBoxes(a.dbg),'이상 영역');
-  renderProcess(a);renderFeedback(a,held);
+  renderProcess(a);
   const cr=document.getElementById('cmpRow');if(cr){cr.innerHTML='';if(extra&&extra.orig){const cur=extra.which||'enh';cr.innerHTML='<span>'+(extra.info||'')+'</span>';[['enh','보정본으로 분석'],['orig','원본으로 분석']].forEach(([k,t])=>{const b=document.createElement('button');b.type='button';b.textContent=t;if(k===cur)b.classList.add('on');b.onclick=()=>analyzeSource(k==='enh'?extra.enh:extra.orig,name,src,{...extra,which:k});cr.appendChild(b)})}}
   const vc=document.getElementById('viewCanvas');if(vc&&vc.scrollIntoView)vc.scrollIntoView({behavior:'smooth',block:'center'});
 }
@@ -2338,13 +2225,12 @@ fillFilterStats();
   function renderLoop(){
     const hn=Object.keys(HUMAN).length,box=$('fltLoop');
     var h='<h3 class="flt-sub">사람이 측정한 결과로 학습하고 다시 필터링</h3><p class="lead" style="font-size:15px;margin-bottom:12px">위 표에서 사람이 정밀하게 측정한 결과를 정답으로 입력하면, 그 이미지들로 모델을 보정한 뒤 <b>같은 이미지를 다시 필터링</b>합니다. 사람의 수고가 모델에 쌓이는 순환입니다. 현재 입력된 사람 판정: <b>'+hn+'장</b></p>';
-    h+='<div class="actions"><button type="button" class="btn" id="fltRetrain"'+(hn<5?' disabled':'')+'>사람 판정 '+hn+'장으로 학습하고 다시 필터링</button> <button type="button" class="btn ghost" id="fltSaveUD"'+(hn<1?' disabled':'')+'>내 데이터·학습에 저장</button></div><div id="fltLoopRes"></div>';
+    h+='<div class="actions"><button type="button" class="btn" id="fltRetrain"'+(hn<5?' disabled':'')+'>사람 판정 '+hn+'장으로 학습하고 다시 필터링</button></div><div id="fltLoopRes"></div>';
     if(hn<5)h+='<p class="note">사람 판정을 5장 이상 입력하면 학습할 수 있습니다. (정답 파일이 있는 경우 아래 "학습 향상도 측정"으로 사람 입력 없이도 효과를 볼 수 있습니다.)</p>';
     box.innerHTML=h;
     const keep=SNAP&&SNAP.html;if(keep)$('fltLoopRes').innerHTML=keep;
     if($('fltRetrain'))$('fltRetrain').onclick=retrain;
-    if($('fltSaveUD'))$('fltSaveUD').onclick=()=>{const U=getUD();Object.keys(HUMAN).forEach(i=>{const it=ITEMS[+i];U.push({t:Date.now(),name:it.name,src:'filter-human',y:HUMAN[i],f:it.f.map(v=>+v.toFixed(3)),pred:it.cls,shared:false})});const ok=setUD(U);$('fltLoopRes').innerHTML='<div class="flag '+(ok?'good':'warn')+'">'+(ok?hn+'장을 "내 데이터·학습"에 저장했습니다. 그곳에서 모델 보정과 익명 공유를 할 수 있습니다.':'저장하지 못했습니다. 브라우저 저장 공간을 확인해 주세요.')+'</div>'};
-  }
+      }
   function evalUnseen(items,model){let a=0,aok=0,wrong=0,n=0;items.forEach(it=>{const d=decide(it.f,model),ok=it.y==null?null:d.cls===it.y;n++;if(d.z<=OOD_Z&&d.conf>=TH){a++;if(ok===true)aok++;if(ok===false)wrong++}});return{n:n,auto:a,autoOk:aok,autoWrong:wrong}}
   function retrain(){
     const idx=Object.keys(HUMAN).map(Number);if(idx.length<5)return;
@@ -2453,7 +2339,7 @@ fillFilterStats();
 (function(){
   const PAGES={
     home:{title:'홈',subs:[]},
-    demo:{title:'분류 체험',subs:[['demo','분류 체험'],['wafermap','웨이퍼 맵 분석'],['mydata','내 데이터·학습']]},
+    demo:{title:'분류 체험',subs:[['demo','분류 체험'],['wafermap','웨이퍼 맵 분석']]},
     types:{title:'불량 유형',subs:[['types','불량 유형']]},
     results:{title:'결과 분석',subs:[['batch','배치 결과 + CSV'],['priority','자동 분석 기준']]},
     data:{title:'데이터·모델',subs:[['dataset','데이터셋 설계'],['model','모델·성능'],['trust','신뢰도 향상 (논문 적용)'],['wmpaper','WM-811K 논문 적용'],['process','불량 잡는 과정'],['growth','데이터가 쌓이면'],['gap','실제 이미지 시험']]},
@@ -2461,7 +2347,7 @@ fillFilterStats();
     about:{title:'프로젝트',subs:[['problem','문제 정의'],['limits','한계와 확인 필요'],['team','팀·출처']]}
   };
   var focusTabs=false;
-  const allSecs=['problem','demo','filter','trust','wmpaper','wafermap','mydata','types','batch','priority','dataset','model','process','growth','gap','icore','impact','limits','team'];
+  const allSecs=['problem','demo','filter','trust','wmpaper','wafermap','types','batch','priority','dataset','model','process','growth','gap','icore','impact','limits','team'];
   const tabsWrap=document.getElementById('subtabsWrap'),tabs=document.getElementById('subtabs');
   const homeView=document.querySelector('[data-view="home"]');
   allSecs.forEach(id=>{const s=document.getElementById(id);if(s)s.style.display='none'});
@@ -2491,7 +2377,6 @@ fillFilterStats();
     }else{tabsWrap.style.display='none';tabs.innerHTML=''}
     document.title=(page==='home'?'ScanWafer | 웨이퍼·칩 표면 불량 이미지 분류기':PAGES[page].title+' | ScanWafer');
     if(sub==='dataset'&&window.buildGallery)window.buildGallery();
-    if(sub==='mydata'&&window.refreshMyData)window.refreshMyData();
     if(sub==='wafermap'&&window.wmInit)window.wmInit();
     if(page==='demo'&&/\/filter$/.test(location.hash)){const f=document.getElementById('filter');if(f)f.scrollIntoView()}else if(!focusTabs)window.scrollTo(0,0);
   }
