@@ -228,6 +228,19 @@
   .hero .sc-tag{margin:10px 0 0;font-size:12.5px;color:var(--muted);text-align:center;max-width:none}
   .hero .sc-cap .pill.hold{background:#6b7f93}
   @media(prefers-reduced-motion:reduce){.hero .sc-stage canvas.on{animation:none}.sc-scan{display:none}.hero .sc-stage canvas{transition:none}}
+  .feat{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))!important}
+  .gal-row{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:center;margin-bottom:12px}
+  .gal-imgs{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+  .gal-imgs canvas{width:100%;border-radius:10px;display:block;box-shadow:0 2px 8px rgba(20,85,143,.15)}
+  @media(max-width:700px){.gal-row{grid-template-columns:1fr}.gal-imgs{grid-template-columns:repeat(3,1fr)}}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:6px 0 22px}
+  @media(max-width:820px){.kpi{grid-template-columns:repeat(2,1fr)}}
+  .kpi .stat b{font-size:30px}
+  .cm td,.cm th{text-align:center}
+  .cm td.diag{background:#e4f6ee;font-weight:800;color:#17734f}
+  .cm td.off{color:#a5322a}
+  .tbl-sm{font-size:13.5px}
+  .tbl-sm th,.tbl-sm td{padding:8px 12px}
 </style>
 </head>
 <body>
@@ -240,6 +253,7 @@
       <li><a href="#/demo" data-route="demo">분류 체험</a></li>
       <li><a href="#/types" data-route="types">불량 유형</a></li>
       <li><a href="#/results" data-route="results">결과 분석</a></li>
+      <li><a href="#/data" data-route="data">데이터·모델</a></li>
       <li><a href="#/value" data-route="value">활용·효과</a></li>
       <li><a href="#/about" data-route="about">프로젝트</a></li>
     </ul>
@@ -259,11 +273,12 @@
         <span class="badge">신뢰도 표시</span>
         <span class="badge">배치 결과 · CSV</span>
         <span class="badge">재검사 우선순위</span>
+        <span class="badge">직접 설계한 데이터로 학습</span>
       </div>
     </div>
     <div class="showcase" id="showcase" role="region" aria-roledescription="carousel" aria-label="ScanWafer 분류 예시 슬라이드">
       <div class="sc-stage">
-        <div class="sc-hud" id="scHud">SAMPLE · DEMO</div>
+        <div class="sc-hud" id="scHud">SAMPLE · TEST SET</div>
         <div class="sc-scan" aria-hidden="true"></div>
       </div>
       <div class="sc-cap" id="scCap" aria-live="off">
@@ -277,7 +292,7 @@
         <button type="button" class="sc-btn" id="scNext" aria-label="다음 예시">&#8250;</button>
         <button type="button" class="sc-btn sc-pause" id="scPause" aria-label="자동 넘김 일시정지">일시정지</button>
       </div>
-      <p class="sc-tag">예시 이미지 · 데모용 가상 결과입니다</p>
+      <p class="sc-tag">합성 테스트 이미지 · 학습한 모델의 실제 출력입니다</p>
     </div>
   </div>
 </header>
@@ -290,7 +305,8 @@
       <a href="#/demo" data-route="demo"><div class="ic">01</div><h3>분류 체험</h3><p>샘플을 고르거나 내 이미지를 올려 정상·스크래치·오염 분류와 신뢰도를 확인합니다.</p><span class="go">체험하기 →</span></a>
       <a href="#/types" data-route="types"><div class="ic">02</div><h3>불량 유형</h3><p>3가지 클래스의 특징과 실제 검사 화면 예시를 봅니다.</p><span class="go">유형 보기 →</span></a>
       <a href="#/results" data-route="results"><div class="ic">03</div><h3>결과 분석</h3><p>배치 결과 요약, CSV 내보내기, 재검사 우선순위를 슬라이더로 조절합니다.</p><span class="go">결과 보기 →</span></a>
-      <a href="#/value" data-route="value"><div class="ic">04</div><h3>활용·효과</h3><p>㈜아이코어와의 연계, 도입 효과 계산기, 앞으로의 계획을 확인합니다.</p><span class="go">활용 보기 →</span></a>
+      <a href="#/data" data-route="data"><div class="ic">04</div><h3>데이터·모델</h3><p>직접 설계한 합성 데이터셋, 학습한 모델의 정확도와 혼동행렬, 실제 이미지 시험 결과를 봅니다.</p><span class="go">근거 보기 →</span></a>
+      <a href="#/value" data-route="value"><div class="ic">05</div><h3>활용·효과</h3><p>㈜아이코어와의 연계, 도입 효과 계산기, 앞으로의 계획을 확인합니다.</p><span class="go">활용 보기 →</span></a>
     </div>
     <div class="cta">
       <div><h3>전부 보는 대신, 꼭 봐야 할 것만</h3><p>신뢰도가 낮은 이미지만 골라서 다시 확인하는 흐름을 직접 체험해 보세요.</p></div>
@@ -320,11 +336,11 @@
   <div class="wrap">
     <span class="tag">DEMO</span>
     <h2>분류 데모</h2>
-    <p class="lead">두 가지로 체험할 수 있습니다. ① 샘플 12장 중 하나를 선택하면 <b>미리 정해 둔 가상 결과</b>가 나오고("결함 위치 표시"로 불량 의심 영역도 볼 수 있습니다), ② 내 이미지를 올리면 이미지 픽셀을 실제로 분석한 <b>프로토타입 결과</b>가 나옵니다.</p>
+    <p class="lead">두 가지로 체험할 수 있습니다. ① 합성 테스트 이미지 12장 중 하나를 선택하면 <b>우리가 학습한 모델이 실제로 계산한 결과</b>가 나오고("결함 위치 표시"로 불량 의심 영역도 볼 수 있습니다), ② 내 이미지를 올리면 같은 모델이 분석합니다. 단, 합성 이미지로만 학습했기 때문에 실제 사진에서는 <b>판정 보류</b>가 나올 수 있습니다.</p>
     <div class="demo">
       <div>
         <div class="viewer"><canvas id="viewCanvas" width="600" height="600" role="img" aria-label="분류 대상 이미지"></canvas><small id="viewName">샘플을 선택하세요</small>
-          <label class="tools"><input type="checkbox" id="boxToggle"> 결함 위치 표시 (샘플 · 목업)</label></div>
+          <label class="tools"><input type="checkbox" id="boxToggle"> 결함 위치 표시 (정답 위치 · 생성기 기준)</label></div>
         <div class="thumbs" id="thumbs" style="margin-top:16px"></div>
         <div class="upload" id="dropZone">
           <input type="file" id="fileInput" accept="image/*" hidden>
@@ -333,7 +349,7 @@
         </div>
       </div>
       <div class="result" id="resultBox">
-        <span class="mock" id="modeBadge">목업 데모 · 실제 모델 추론이 아닙니다</span>
+        <span class="mock real" id="modeBadge">학습한 모델의 실제 출력 · 합성 테스트 이미지</span>
         <div id="resultBody"></div>
       </div>
     </div>
@@ -350,7 +366,7 @@
       <div class="card type-card"><canvas id="typeScratch" width="400" height="400" role="img" aria-label="가늘고 긴 선형 흠집이 있는 스크래치 예시"></canvas><span class="pill scratch">스크래치 (Scratch)</span><p>가늘고 긴 선형 흠집입니다. 이송이나 접촉 과정에서 생길 수 있습니다.</p></div>
       <div class="card type-card"><canvas id="typeContam" width="400" height="400" role="img" aria-label="점과 얼룩 형태의 입자가 붙은 오염 예시"></canvas><span class="pill contam">오염 (Contamination)</span><p>입자나 얼룩이 점 또는 덩어리 형태로 표면에 붙어 있는 상태입니다.</p></div>
     </div>
-    <p class="note">※ 위 3장의 웨이퍼 이미지는 설명용으로 코드로 그린 임시 이미지입니다. 실제 샘플로 교체 예정입니다.</p>
+    <p class="note">※ 위 3장의 웨이퍼 이미지는 우리가 설계한 생성기로 만든 합성 이미지입니다. 실제 샘플로 교체 예정입니다.</p>
     <div class="examples" id="examples">
       <h3>실제 검사 화면은 이렇게 보입니다</h3>
       <p class="lead" style="margin-bottom:0">표면 검사 장비는 불량 위치를 박스로 표시하고 유형을 알려 줍니다. ScanWafer의 <b>결함 위치 표시</b>와 <b>유형 분류</b>가 맡으려는 역할이 바로 이 부분입니다.</p>
@@ -377,7 +393,7 @@
     <div class="summary" id="summary"></div>
     <div class="actions"><button class="btn" id="csvBtn">CSV 내보내기</button></div>
     <div style="overflow-x:auto"><table id="batchTable"></table></div>
-    <p class="note">※ 표의 결과는 데모용 가상 데이터입니다.</p>
+    <p class="note">※ 합성 테스트 이미지 12장에 대한 모델의 실제 출력입니다. 정답과 다른 이미지(불일치)도 그대로 보여 줍니다. 12장은 신뢰도 구간별로 골랐습니다.</p>
   </div>
 </section>
 
@@ -437,7 +453,7 @@
       <div>
         <label>하루 검사 이미지 수 (장)<input type="number" id="cIn1" value="1000" min="1" inputmode="numeric"></label>
         <label>이미지 1장을 사람이 확인하는 시간 (초)<input type="number" id="cIn2" value="10" min="1" inputmode="numeric"></label>
-        <label>재검사 대상 비율 (%) <small style="color:var(--muted)">· 기본값은 위 배치 예시 (<span id="cBase"></span>)</small><input type="number" id="cIn3" min="0" max="100" inputmode="numeric"></label>
+        <label>재검사 대상 비율 (%) <small style="color:var(--muted)">· 기본값은 합성 테스트 이미지 기준 (<span id="cBase"></span>)</small><input type="number" id="cIn3" min="0" max="100" inputmode="numeric"></label>
       </div>
       <div>
         <div style="color:var(--muted);font-size:14px">하루 사람이 확인하는 시간 절감 (가정)</div>
@@ -451,12 +467,12 @@
 
     <h3 style="margin-top:44px;font-size:20px">로드맵 (계획)</h3>
     <div class="road">
-      <div class="card now"><div class="step">STEP 1 · 지금</div><h3>구상과 프로토타입</h3><p>3클래스 분류 화면, 신뢰도 표시, 배치 요약·CSV, 재검사 우선순위 설계. 업로드 이미지는 규칙 기반으로 분석합니다.</p></div>
-      <div class="card"><div class="step">STEP 2</div><h3>데이터와 모델</h3><p>사용 가능한 공개 데이터셋 또는 협의된 이미지를 확보해 학습하고, 정확도·클래스별 재현율·혼동행렬로 평가합니다.</p></div>
+      <div class="card now"><div class="step">STEP 1 · 지금</div><h3>구상과 프로토타입</h3><p>합성 데이터셋 설계, 특징 기반 신경망 학습(합성 테스트 정확도 95.1%), 신뢰도·재검사 우선순위, 브라우저에서 직접 실행.</p></div>
+      <div class="card"><div class="step">STEP 2</div><h3>데이터와 모델</h3><p>실제 장비 이미지(공개 데이터 또는 협의된 이미지)를 확보해 재학습하고, 정확도·클래스별 재현율·혼동행렬로 다시 평가합니다.</p></div>
       <div class="card"><div class="step">STEP 3</div><h3>현장 검증</h3><p>검사장비 엔지니어·품질 담당자 인터뷰로 문제 가설과 재검사 기준값(85%, 70%)을 확인하고 조정합니다.</p></div>
       <div class="card"><div class="step">STEP 4</div><h3>연동과 확장</h3><p>이미지 폴더·검사장비 연동, 결과 CSV의 API화, 클래스 추가와 조명·초점 조건 비교 기능으로 확장합니다.</p></div>
     </div>
-    <p class="note">※ 2~4단계는 아직 진행하지 않은 계획입니다. 우리 모델의 정확도는 측정 전이어서 성능 수치를 싣지 않았습니다. 아래의 수치는 외부 참고 사례입니다.</p>
+    <p class="note">※ 2~4단계는 아직 진행하지 않은 계획입니다. 우리 모델의 정확도는 합성 테스트 이미지 기준으로만 측정했고(데이터·모델 페이지), 실제 장비 이미지에서의 성능은 아직 모릅니다. 아래 수치는 외부 참고 사례입니다.</p>
 
     <h3 style="margin-top:44px;font-size:20px">데이터셋 후보와 평가 계획</h3>
     <div class="two" style="margin-top:20px">
@@ -466,7 +482,7 @@
           <li>웨이퍼 맵 811,457장 중 라벨이 있는 것은 172,950장, 실제 불량 패턴이 있는 것은 25,519장입니다.</li>
           <li>클래스는 Center, Donut, Edge-Loc, Edge-Ring, Loc, Random, Scratch, Near-full, none 9가지입니다.</li>
           <li>클래스 불균형이 큽니다. Edge-Ring 9,680장, Near-full 149장입니다.</li>
-          <li>이미지 크기가 632종류라 입력을 맞추는 특징 추출이 필요합니다.</li>
+          <li>이미지 크기가 632종류라 입력을 맞추는 특징 추출이 필요합니다. (우리도 이미지를 200×200으로 맞춘 뒤 특징을 뽑습니다.)</li>
           <li>참고 사례(블로그 실습, 선형 SVM 59개 특징)의 테스트 정확도는 76.83%였고, Donut·Loc·Scratch의 오분류가 많았습니다. <b>우리 모델의 성능이 아닙니다.</b></li>
         </ul></div>
       <div class="card hyp"><span class="label hyp">가설 · 팀의 활용 계획</span>
@@ -482,6 +498,124 @@
   </div>
 </section>
 
+<section id="dataset">
+  <div class="wrap">
+    <span class="tag">DATASET</span>
+    <h2>우리가 설계한 합성 데이터셋</h2>
+    <p class="lead">표면 검사 이미지를 공개 데이터에서 구하지 못해서, 팀이 직접 <b>이미지 생성기</b>를 설계했습니다. 웨이퍼를 그리는 코드에 위치, 조명, 잡음, 불량의 크기와 농도를 무작위로 바꾸는 변수를 넣어서, 같은 클래스라도 이미지가 매번 다르게 나옵니다.</p>
+    <div class="two">
+      <div class="card fact"><span class="label fact">데이터 구성</span>
+        <h3>1,500장, 3클래스</h3>
+        <table class="tbl-sm"><tr><th>구분</th><th>장수</th><th>용도</th></tr>
+          <tr><td>학습</td><td>1,050 (클래스당 350)</td><td>모델 가중치 학습</td></tr>
+          <tr><td>검증</td><td>225 (클래스당 75)</td><td>학습 시점 선택</td></tr>
+          <tr><td>테스트</td><td>225 (클래스당 75)</td><td>최종 성능 측정 (학습에 미사용)</td></tr></table>
+        <p style="margin-top:10px">이미지 크기는 600×600이고, 분석할 때는 200×200 흑백으로 줄입니다. 정답 라벨은 생성할 때 자동으로 붙기 때문에 라벨 오류가 없습니다.</p></div>
+      <div class="card hyp"><span class="label hyp">설계한 무작위 변수</span>
+        <h3>왜 이렇게 만들었나요?</h3>
+        <ul>
+          <li><b>공통:</b> 웨이퍼 위치·크기, 다이 격자 간격과 선 농도, 밝기와 조명 방향, 센서 잡음, 흐린 얼룩. 모델이 격자나 얼룩을 불량으로 착각하지 않도록 일부러 넣었습니다.</li>
+          <li><b>스크래치:</b> 개수 1~3, 길이, 굵기, 대비, 휘어진 정도.</li>
+          <li><b>오염:</b> 입자 수 3~40, 크기, 군집 반경, 농도. 입자가 드문 어려운 경우도 포함됩니다.</li>
+          <li><b>정상:</b> 아주 작은 먼지처럼 불량이 아닌 흔적을 일부 넣었습니다.</li>
+        </ul></div>
+    </div>
+    <h3 style="margin-top:40px;font-size:20px">직접 생성해 보기</h3>
+    <p class="lead" style="margin-bottom:16px">버튼을 누를 때마다 생성기가 새 이미지를 만듭니다.</p>
+    <div id="dsGal"></div>
+    <div class="actions" style="margin-top:16px"><button class="btn" id="dsRegen" type="button">새로 생성</button></div>
+    <p class="note">※ 합성 이미지는 실제 장비 이미지와 다릅니다. 실제 데이터의 복잡함과 애매함은 반영하지 못했습니다. (실제 이미지 시험 결과는 "실제 이미지 시험" 탭 참고)</p>
+  </div>
+</section>
+
+<section id="model">
+  <div class="wrap">
+    <span class="tag">MODEL</span>
+    <h2>모델과 성능</h2>
+    <p class="lead">이미지에서 사람이 눈으로 보는 단서(선 모양, 덩어리 모양, 어둡기)를 숫자로 뽑고, 작은 신경망이 그 숫자로 클래스를 판단합니다. 이 모델은 지금 이 페이지의 브라우저에서 직접 실행됩니다.</p>
+    <div class="flow" aria-label="모델 처리 흐름">
+      <div class="box"><b>입력 이미지</b>200×200 흑백</div><div class="arr">→</div>
+      <div class="box"><b>전처리</b>배경 제거 · 격자선 제거</div><div class="arr">→</div>
+      <div class="box"><b>이상 영역 추출</b>밝기 편차가 큰 곳</div><div class="arr">→</div>
+      <div class="box"><b>특징 19개</b>선 길이, 군집 크기 등</div><div class="arr">→</div>
+      <div class="box mine"><b>신경망 19-14-3</b>클래스 확률</div>
+    </div>
+    <h3 style="margin-top:34px;font-size:20px">합성 테스트 이미지 225장 결과</h3>
+    <div class="kpi">
+      <div class="stat"><b>95.1%</b><span>테스트 정확도 (214/225)</span></div>
+      <div class="stat"><b style="color:var(--muted)">45.3%</b><span>처음 만든 규칙 기반 방식 (같은 이미지)</span></div>
+      <div class="stat"><b>9 / 11</b><span>오분류 중 재검사로 걸러낸 수 (기준 85%)</span></div>
+      <div class="stat"><b>10.7%</b><span>사람이 다시 볼 이미지 비율 (기준 85%)</span></div>
+    </div>
+    <div class="two">
+      <div>
+        <h3 style="font-size:16px;margin-bottom:10px">혼동행렬 (행: 정답, 열: 예측)</h3>
+        <div style="overflow-x:auto"><table class="cm tbl-sm"><tr><th></th><th>정상</th><th>스크래치</th><th>오염</th></tr>
+          <tr><th>정상</th><td class="diag">74</td><td class="off">0</td><td class="off">1</td></tr>
+          <tr><th>스크래치</th><td class="off">6</td><td class="diag">66</td><td class="off">3</td></tr>
+          <tr><th>오염</th><td class="off">0</td><td class="off">1</td><td class="diag">74</td></tr></table></div>
+        <table class="tbl-sm" style="margin-top:14px"><tr><th>클래스</th><th>정밀도</th><th>재현율</th><th>F1</th></tr>
+          <tr><td>정상</td><td>92.5%</td><td>98.7%</td><td>95.5%</td></tr>
+          <tr><td>스크래치</td><td>98.5%</td><td>88.0%</td><td>93.0%</td></tr>
+          <tr><td>오염</td><td>94.9%</td><td>98.7%</td><td>96.7%</td></tr></table>
+      </div>
+      <div>
+        <h3 style="font-size:16px;margin-bottom:10px">재검사 기준별 효과 (테스트 225장, 오분류 11장)</h3>
+        <table class="tbl-sm"><tr><th>기준 신뢰도</th><th>사람이 볼 비율</th><th>오분류 포착</th></tr>
+          <tr><td>70%</td><td>3.6%</td><td>5 / 11</td></tr>
+          <tr><td>80%</td><td>7.1%</td><td>6 / 11</td></tr>
+          <tr><td><b>85%</b></td><td><b>10.7%</b></td><td><b>9 / 11</b></td></tr>
+          <tr><td>90%</td><td>17.8%</td><td>9 / 11</td></tr>
+          <tr><td>95%</td><td>35.6%</td><td>9 / 11</td></tr></table>
+        <p class="note" style="margin-top:10px">"애매한 것만 사람이 본다"는 아이디어를 숫자로 확인한 결과입니다. 기준을 85%로 두면 이미지의 약 10%만 다시 보고 오분류의 82%를 걸러냅니다.</p>
+      </div>
+    </div>
+    <div class="two" style="margin-top:24px">
+      <div class="card fact"><span class="label fact">학습 방법</span>
+        <ul>
+          <li>입력 특징 19개를 표준화한 뒤, 은닉층 14개의 신경망(tanh)으로 3클래스 확률을 계산합니다.</li>
+          <li>Adam 방식으로 학습하고, 검증 손실이 가장 낮은 시점의 가중치를 골랐습니다.</li>
+          <li>초기값을 바꿔 5번 학습했을 때 테스트 정확도는 95.1~96.4%(평균 95.8%)였고, 검증 손실이 가장 낮은 모델(95.1%)을 사용합니다.</li>
+        </ul></div>
+      <div class="card hyp"><span class="label hyp">솔직한 해석</span>
+        <ul>
+          <li>스크래치 재현율이 88%로 가장 낮습니다. 스크래치 6장을 정상으로 판단했습니다.</li>
+          <li>오분류 11장 중 2장은 신뢰도가 95%를 넘었습니다. 신뢰도가 높다고 반드시 맞는 것은 아닙니다.</li>
+          <li>처음 설계한 특징으로는 정확도가 약 60%였고, 격자선 제거와 직선·군집 특징을 추가해 개선했습니다. (이 과정에서 생성기 설정도 일부 조정해서 단순 비교는 어렵습니다.)</li>
+        </ul></div>
+    </div>
+    <p class="note">※ 모든 수치는 우리가 만든 합성 테스트 이미지 기준입니다. 실제 장비 이미지에서의 성능이 아닙니다. 테스트 이미지는 학습과 시점 선택에 사용하지 않았습니다.</p>
+  </div>
+</section>
+
+<section id="gap">
+  <div class="wrap">
+    <span class="tag">REALITY CHECK</span>
+    <h2>실제 이미지로 시험해 봤습니다</h2>
+    <p class="lead">합성 이미지로만 학습한 모델이 <b>실제 검사 이미지</b>에서는 어떻게 동작하는지, "불량 유형" 페이지에 있는 참고 이미지 5장으로 시험했습니다.</p>
+    <div style="overflow-x:auto"><table class="tbl-sm"><tr><th>이미지</th><th>정답 (원본 캡션)</th><th>모델 처리</th><th>특징값 이탈</th></tr>
+      <tr><td>웨이퍼 전체 (원본, 왼쪽)</td><td>오염 (Contaminants)</td><td><b>오염 88%</b> (정답)</td><td>3.5배</td></tr>
+      <tr><td>칩 Scratch (왼쪽 위)</td><td>스크래치</td><td><span class="prio mid">판정 보류</span></td><td>12.1배</td></tr>
+      <tr><td>칩 Dirt</td><td>오염</td><td><span class="prio mid">판정 보류</span></td><td>12.3배</td></tr>
+      <tr><td>칩 Scratch (왼쪽 아래)</td><td>스크래치</td><td><span class="prio mid">판정 보류</span></td><td>10.1배</td></tr>
+      <tr><td>칩 Chipping</td><td>모서리 깨짐 (3클래스 아님)</td><td><span class="prio mid">판정 보류</span></td><td>22.0배</td></tr></table></div>
+    <div class="two" style="margin-top:24px">
+      <div class="card fact"><span class="label fact">확인된 사실</span>
+        <ul>
+          <li>합성 웨이퍼로 학습한 모델은 <b>칩을 확대한 실제 이미지</b>에서는 학습 범위를 크게 벗어나, 4장 모두 판정 보류가 되었습니다.</li>
+          <li>판정 보류 기준은 "특징값이 학습 데이터에서 표준편차의 7배 이상 벗어남"입니다. 합성 테스트 225장은 최대 5.9배였고, 위 칩 이미지는 10.1~22.0배였습니다.</li>
+          <li>웨이퍼 전체 이미지는 범위 안이었고 정답(오염)을 맞혔습니다.</li>
+        </ul></div>
+      <div class="card todo"><span class="label todo">한계</span>
+        <ul>
+          <li>5장뿐이라 통계적 의미는 없습니다. 웨이퍼 1장을 맞힌 것은 우연일 수 있습니다.</li>
+          <li>잘못된 답을 자신 있게 내놓는 대신 "모르겠다"고 말하게 만든 점이 이 시험의 핵심 결과입니다.</li>
+          <li>다음 단계는 <b>실제 장비 이미지로 재학습하고 검증</b>하는 것입니다.</li>
+        </ul></div>
+    </div>
+  </div>
+</section>
+
 <section id="limits" class="alt">
   <div class="wrap">
     <span class="tag">LIMITS</span>
@@ -489,10 +623,11 @@
     <p class="lead">사실, 가설, 확인 필요 항목을 구분해서 정리했습니다.</p>
     <div class="cols">
       <div class="card fact"><h3>사실</h3><ul>
-        <li>샘플 12장의 분류 결과와 신뢰도는 모두 가상 값(목업)입니다.</li>
-        <li>업로드 이미지 분석은 학습된 AI 모델이 아니라 규칙 기반 프로토타입입니다. (중앙 원형 영역에서 어둡거나 밝은 이상 영역을 찾아 선형/덩어리로 구분, 수평·수직 격자선은 제외). 코드로 그린 가상 이미지 90장 자체 시험에서는 86장이 맞았지만, 같은 코드로 만든 이미지라 실제 웨이퍼 성능을 뜻하지는 않습니다.</li>
+        <li>샘플 12장은 합성 테스트 이미지이고, 분류 결과와 신뢰도는 우리가 학습한 모델이 실제로 계산한 값입니다. 12장은 신뢰도 구간별로 골랐습니다.</li>
+        <li>모델은 합성 이미지 1,500장으로만 학습했고, 합성 테스트 이미지 225장에서 정확도 95.1%를 기록했습니다. 실제 장비 이미지에서의 성능은 측정하지 못했습니다.</li>
+        <li>실제 칩 확대 이미지 4장은 학습 범위를 벗어나 "판정 보류"가 되었습니다. (데이터·모델 > 실제 이미지 시험)</li>
         <li>분류 클래스는 정상, 스크래치, 오염 3가지입니다.</li>
-        <li>이 페이지의 이미지는 코드로 그린 임시 이미지입니다.</li></ul></div>
+        <li>이 페이지의 웨이퍼 이미지는 우리가 설계한 생성기로 만든 합성 이미지입니다.</li></ul></div>
       <div class="card hyp"><h3>가설</h3><ul>
         <li>수작업 확인에 시간이 많이 든다.</li>
         <li>판단 기준이 담당자마다 다를 수 있다.</li>
@@ -500,7 +635,7 @@
         <li>아이코어의 고객 지원이나 부가 소프트웨어로 쓸 수 있다.</li></ul></div>
       <div class="card todo"><h3>확인 필요</h3><ul>
         <li>실제로 사용할 샘플 이미지와 데이터셋 (공개 WM-811K는 웨이퍼 맵 형식이라 표면 이미지와 다름)</li>
-        <li>실제 모델의 정확도 (업로드 분석기는 실제 웨이퍼 사진으로 검증되지 않음)</li>
+        <li>실제 장비 이미지에서의 정확도 (지금은 합성 이미지 기준 95.1%만 측정함)</li>
         <li>현장 담당자 인터뷰와 재검사 기준값</li>
         <li>참고 이미지(칩·웨이퍼 검사 예시)의 출처와 사용 허가</li></ul></div>
     </div>
@@ -524,7 +659,7 @@
   </div>
 </section>
 
-<footer class="slim">ScanWafer · 2026 NI2.0 AID 해커톤 Team 4 · 대림대학교 반도체학과 · 본 페이지의 분류 결과는 데모용 목업입니다.</footer>
+<footer class="slim">ScanWafer · 2026 NI2.0 AID 해커톤 Team 4 · 대림대학교 반도체학과 · 분류 결과는 합성 이미지 기준의 학습 모델 출력입니다.</footer>
 
 <script>
 // ---------- seeded RNG ----------
@@ -584,28 +719,169 @@ function drawWafer(canvas,type,seed){
   return boxes;
 }
 
-drawWafer(document.getElementById('typeOk'),'ok',11);
-drawWafer(document.getElementById('typeScratch'),'scratch',23);
-drawWafer(document.getElementById('typeContam'),'contam',31);
+genWafer(document.getElementById('typeOk'),'ok',487);
+genWafer(document.getElementById('typeScratch'),'scratch',100439);
+genWafer(document.getElementById('typeContam'),'contam',200450);
 
-// ---------- mock data ----------
+// ---------- 합성 이미지 생성기 + 특징 추출 + 학습된 모델 ----------
+
+function genWafer(canvas,type,seed){
+  const r=rng((seed*7+13)>>>0),ctx=canvas.getContext('2d',{willReadFrequently:true}),W=canvas.width,H=canvas.height;
+  const U=(a,b)=>a+(b-a)*r(),boxes=[];
+  const bgc=Math.round(U(8,30));ctx.fillStyle='rgb('+bgc+','+(bgc+14)+','+(bgc+30)+')';ctx.fillRect(0,0,W,H);
+  const cx=W/2+U(-.03,.03)*W,cy=H/2+U(-.03,.03)*H,R=W*U(.40,.47);
+  ctx.save();ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.clip();
+  const tone=U(.85,1.12),lx=cx+U(-.5,.5)*R,ly=cy+U(-.5,.5)*R;
+  const g=ctx.createRadialGradient(lx,ly,R*.1,cx,cy,R*1.05);
+  const c0=[185,211,234].map(v=>Math.min(255,Math.round(v*tone))),c1=[127,166,201].map(v=>Math.round(v*tone)),c2=[90,134,173].map(v=>Math.round(v*tone));
+  g.addColorStop(0,'rgb('+c0+')');g.addColorStop(.6,'rgb('+c1+')');g.addColorStop(1,'rgb('+c2+')');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  const n=Math.round(U(9,19)),step=(R*2)/n,x0=cx-R,y0=cy-R,ga=U(.15,.45),gw=U(.8,1.6);
+  ctx.strokeStyle='rgba(20,60,100,'+ga+')';ctx.lineWidth=gw;
+  for(let i=0;i<=n;i++){ctx.beginPath();ctx.moveTo(x0+i*step,y0);ctx.lineTo(x0+i*step,y0+2*R);ctx.stroke();ctx.beginPath();ctx.moveTo(x0,y0+i*step);ctx.lineTo(x0+2*R,y0+i*step);ctx.stroke()}
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++){ctx.fillStyle='rgba(255,255,255,'+(0.02+r()*0.09)+')';ctx.fillRect(x0+i*step+3,y0+j*step+3,step-6,step-6)}
+  const ns=Math.floor(U(0,3.99));
+  for(let k=0;k<ns;k++){const sx=cx+U(-.8,.8)*R,sy=cy+U(-.8,.8)*R,sr=R*U(.08,.25);const dark=r()<.6;ctx.fillStyle=(dark?'rgba(30,40,60,':'rgba(255,255,255,')+U(.02,.07)+')';ctx.beginPath();ctx.arc(sx,sy,sr,0,Math.PI*2);ctx.fill()}
+  if(type==='scratch'){
+    const count=1+Math.floor(U(0,2.99));
+    for(let k=0;k<count;k++){
+      const a=U(0,Math.PI),len=R*U(.3,1.3),ox=cx+U(-.7,.7)*R,oy=cy+U(-.7,.7)*R;
+      const x1=ox-Math.cos(a)*len/2,y1=oy-Math.sin(a)*len/2,x2=ox+Math.cos(a)*len/2,y2=oy+Math.sin(a)*len/2;
+      const bx=(x1+x2)/2+U(-.08,.08)*R,by=(y1+y2)/2+U(-.08,.08)*R,c=U(.5,1),w=U(1.2,2.8);
+      ctx.lineCap='round';
+      ctx.strokeStyle='rgba(20,30,50,'+(.5*c)+')';ctx.lineWidth=w*2.4;ctx.beginPath();ctx.moveTo(x1,y1);ctx.quadraticCurveTo(bx,by,x2,y2);ctx.stroke();
+      ctx.strokeStyle='rgba(255,255,255,'+(.9*c)+')';ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(x1,y1);ctx.quadraticCurveTo(bx,by,x2,y2);ctx.stroke();
+      const mx=(x1+x2)/2+(bx-(x1+x2)/2)/2,my=(y1+y2)/2+(by-(y1+y2)/2)/2,xs=[x1,x2,mx],ys=[y1,y2,my];
+      boxes.push({x:Math.min(...xs)-12,y:Math.min(...ys)-12,w:Math.max(...xs)-Math.min(...xs)+24,h:Math.max(...ys)-Math.min(...ys)+24});
+    }
+  }
+  if(type==='contam'){
+    const clusters=1+Math.floor(U(0,2.99));
+    for(let k=0;k<clusters;k++){
+      const px=cx+U(-.75,.75)*R,py=cy+U(-.75,.75)*R,cnt=Math.floor(U(3,40)),spread=R*U(.06,.28),pr=U(1.2,9),dens=U(.35,.9);
+      for(let m=0;m<cnt;m++){
+        const a=U(0,Math.PI*2),d=Math.abs(U(-1,1))*spread,rx=px+Math.cos(a)*d,ry=py+Math.sin(a)*d,rad=Math.max(1,pr*U(.3,1));
+        ctx.fillStyle='rgba(60,35,20,'+(dens*U(.6,1))+')';ctx.beginPath();ctx.arc(rx,ry,rad,0,Math.PI*2);ctx.fill();
+      }
+      if(r()<.6){ctx.fillStyle='rgba(90,60,30,'+U(.1,.3)+')';ctx.beginPath();ctx.arc(px,py,spread*U(.7,1.2),0,Math.PI*2);ctx.fill()}
+      boxes.push({x:px-spread-10,y:py-spread-10,w:spread*2+20,h:spread*2+20});
+    }
+  }
+  if(type==='ok'){const sp=Math.floor(U(0,3.99));for(let k=0;k<sp;k++){ctx.fillStyle='rgba(40,30,30,'+U(.1,.3)+')';ctx.beginPath();ctx.arc(cx+U(-.8,.8)*R,cy+U(-.8,.8)*R,U(.8,2),0,Math.PI*2);ctx.fill()}}
+  const a2=U(0,Math.PI*2),sh=ctx.createLinearGradient(cx+Math.cos(a2)*R,cy+Math.sin(a2)*R,cx-Math.cos(a2)*R,cy-Math.sin(a2)*R);
+  sh.addColorStop(0,'rgba(255,255,255,'+U(.1,.3)+')');sh.addColorStop(.5,'rgba(255,255,255,0)');sh.addColorStop(1,'rgba(0,0,0,'+U(.08,.25)+')');
+  ctx.fillStyle=sh;ctx.fillRect(0,0,W,H);
+  ctx.restore();
+  const id=ctx.getImageData(0,0,W,H),d=id.data,sg=U(1.5,7);
+  for(let i=0;i<d.length;i+=4){const nz=(r()+r()+r()-1.5)*sg*1.6;d[i]+=nz;d[i+1]+=nz;d[i+2]+=nz}
+  ctx.putImageData(id,0,0);
+  ctx.strokeStyle='rgba(255,255,255,.7)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.stroke();
+  ctx.fillStyle='rgb('+bgc+','+(bgc+14)+','+(bgc+30)+')';ctx.beginPath();ctx.arc(cx,cy+R,8,0,Math.PI*2);ctx.fill();
+  return boxes;
+}
+
+var FEAT_NAMES=['이상 영역 비율','이상 덩어리 수','선형 덩어리 수','점·덩어리형 수','선형 총 길이','가장 긴 선 길이','덩어리형 총 면적','가장 큰 덩어리 면적','최대 가늘기','밝은 이상 비율','어두운 이상 비율','어두운 비중','배경 잡음 수준','상위 1% 편차','직선 지지도','직선 집중도','군집 덩어리 수','가장 큰 군집 크기','군집 밀집도'];
+var FN=200;
+function grayFromSource(source){
+  const N=FN,c=document.createElement('canvas');c.width=N;c.height=N;
+  const x=c.getContext('2d',{willReadFrequently:true});
+  const sw=source.naturalWidth||source.width,sh=source.naturalHeight||source.height,m=Math.min(sw,sh);
+  x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(source,(sw-m)/2,(sh-m)/2,m,m,0,0,N,N);
+  const d=x.getImageData(0,0,N,N).data,g=new Uint8Array(N*N);
+  for(let i=0;i<N*N;i++)g[i]=Math.round(0.299*d[i*4]+0.587*d[i*4+1]+0.114*d[i*4+2]);
+  return g;
+}
+function comps(mask,N,minPx,an){
+  const seen=new Uint8Array(N*N),out=[];
+  for(let i=0;i<N*N;i++){
+    if(!mask[i]||seen[i])continue;
+    const st=[i];seen[i]=1;const pts=[];
+    while(st.length){const p=st.pop();pts.push(p);const px=p%N,py=(p/N)|0;
+      for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const qx=px+dx,qy=py+dy;if(qx<0||qy<0||qx>=N||qy>=N)continue;const q=qy*N+qx;if(mask[q]&&!seen[q]){seen[q]=1;st.push(q)}}}
+    let n0=0;for(const p of pts)n0+=an[p];
+    if(n0<minPx)continue;
+    let mx=0,my=0;pts.forEach(p=>{mx+=p%N;my+=(p/N)|0});mx/=pts.length;my/=pts.length;
+    let sxx=0,syy=0,sxy=0,x0=1e9,x1=-1,y0=1e9,y1=-1;pts.forEach(p=>{const px=p%N,py=(p/N)|0,a=px-mx,b=py-my;sxx+=a*a;syy+=b*b;sxy+=a*b;if(px<x0)x0=px;if(px>x1)x1=px;if(py<y0)y0=py;if(py>y1)y1=py});
+    sxx/=pts.length;syy/=pts.length;sxy/=pts.length;
+    const tr=sxx+syy,det=sxx*syy-sxy*sxy,disc=Math.sqrt(Math.max(0,tr*tr/4-det));
+    const l1=tr/2+disc,l2=Math.max(tr/2-disc,0.15);
+    out.push({n0:n0,area:pts.length,elong:Math.sqrt(l1/l2),len:Math.sqrt(l1)*3.46,diag:Math.hypot(x1-x0+1,y1-y0+1)});
+  }
+  return out;
+}
+function dilate(a,N,r){
+  const o=new Uint8Array(N*N);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){if(!a[y*N+x])continue;for(let dy=-r;dy<=r;dy++)for(let dx=-r;dx<=r;dx++){const qx=x+dx,qy=y+dy;if(qx>=0&&qy>=0&&qx<N&&qy<N)o[qy*N+qx]=1}}
+  return o;
+}
+function featuresFromGray(g){
+  const N=FN,K=Math.round(N*0.045);
+  const I=new Float64Array((N+1)*(N+1));
+  for(let y=0;y<N;y++){let row=0;for(let xx=0;xx<N;xx++){row+=g[y*N+xx];I[(y+1)*(N+1)+xx+1]=I[y*(N+1)+xx+1]+row}}
+  const res=new Float32Array(N*N),cx=N/2,cy=N/2,Rm=N*0.36,mask=new Uint8Array(N*N);let mcount=0;
+  for(let y=0;y<N;y++)for(let xx=0;xx<N;xx++){
+    const x0=Math.max(0,xx-K),x1=Math.min(N,xx+K+1),y0=Math.max(0,y-K),y1=Math.min(N,y+K+1);
+    const s=I[y1*(N+1)+x1]-I[y0*(N+1)+x1]-I[y1*(N+1)+x0]+I[y0*(N+1)+x0];
+    res[y*N+xx]=g[y*N+xx]-s/((x1-x0)*(y1-y0));
+    if((xx-cx)**2+(y-cy)**2<Rm*Rm){mask[y*N+xx]=1;mcount++}
+  }
+  // 다이 격자선(행·열 방향으로 이어지는 패턴) 제거: 행·열별 중앙값을 뺀다
+  const rowMed=new Float32Array(N),colMed=new Float32Array(N);
+  const med=a=>{if(!a.length)return 0;a.sort((p,q)=>p-q);return a[a.length>>1]};
+  for(let y=0;y<N;y++){const a=[];for(let x=0;x<N;x++)if(mask[y*N+x])a.push(res[y*N+x]);rowMed[y]=med(a)}
+  for(let x=0;x<N;x++){const a=[];for(let y=0;y<N;y++)if(mask[y*N+x])a.push(res[y*N+x]);colMed[x]=med(a)}
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++)res[y*N+x]-=rowMed[y]+colMed[x];
+  const vals=[];for(let i=0;i<N*N;i++)if(mask[i])vals.push(Math.abs(res[i]));
+  vals.sort((a,b)=>a-b);
+  const mad=vals[vals.length>>1]||0,p99=vals[Math.floor(vals.length*0.99)]||0;
+  const T=Math.max(7,mad*5),an=new Uint8Array(N*N);let bright=0,dark=0,anCount=0;
+  for(let i=0;i<N*N;i++)if(mask[i]&&Math.abs(res[i])>T){an[i]=1;anCount++;if(res[i]>0)bright++;else dark++}
+  // 직선 지지도: 여러 각도로 투영했을 때 한 줄에 몰린 이상 픽셀 수
+  const pts=[];for(let i=0;i<N*N;i++)if(an[i])pts.push([i%N-cx,((i/N)|0)-cy]);
+  let bestLine=0;
+  if(pts.length){for(let a=0;a<180;a+=6){const th=a*Math.PI/180,cs=Math.cos(th),sn=Math.sin(th),bins=new Map();for(const [px,py] of pts){const rho=Math.round((-px*sn+py*cs)/1.5);bins.set(rho,(bins.get(rho)||0)+1)}for(const v of bins.values())if(v>bestLine)bestLine=v}}
+  // 개별 덩어리 분석 (팽창 1)
+  const c1=comps(dilate(an,N,1),N,4,an);
+  let scratchLen=0,maxLen=0,contamArea=0,maxBlob=0,nS=0,nC=0,maxElong=1;
+  c1.forEach(o=>{maxElong=Math.max(maxElong,o.elong);if(o.elong>=3.2&&o.len>=10){scratchLen+=o.len;maxLen=Math.max(maxLen,o.len);nS++}else if(o.elong<3.2){contamArea+=o.n0;maxBlob=Math.max(maxBlob,o.n0);nC++}});
+  // 군집 분석 (팽창 4): 작은 입자들이 모인 덩어리
+  const c4=comps(dilate(an,N,4),N,6,an);
+  let maxCl=0,clDens=0;c4.forEach(o=>{if(o.n0>maxCl){maxCl=o.n0;clDens=o.n0/Math.max(1,o.area)}});
+  const f=[anCount/mcount*100,c1.length,nS,nC,scratchLen/N,maxLen/N,contamArea/mcount*100,maxBlob/mcount*100,Math.log(maxElong),bright/mcount*100,dark/mcount*100,(dark+1)/(bright+dark+2),mad,p99,bestLine/N,anCount?bestLine/anCount:0,c4.length,maxCl/mcount*100,clDens];
+  return {f:f,T:T,nS:nS,nC:nC};
+}
+function extractFeatures(source){return featuresFromGray(grayFromSource(source))}
+
+const MODEL={"mean":[0.7206233851550106,2.6752380952380954,0.6857142857142857,1.9876190476190476,0.13990208792097958,0.09732133359414753,0.46176135047231903,0.3051994709320569,1.0150406041387996,0.13782747809969623,0.5827959070553154,0.728906659935771,2.98301280214673,13.516364626203265,0.11879999999999996,0.3256885651721664,1.1838095238095239,0.5461248119374621,0.0877632713876384],"sd":[0.8997692078599182,3.208954167337477,1.0850875383978842,3.085579215150781,0.2269582926971427,0.1438593597203091,0.8619885718018082,0.6221541237059062,0.9922480523328283,0.3146825819851755,0.7214210276793194,0.24138134225424385,0.8153795951389692,10.166798628661882,0.11191126586975703,0.2966947565630681,1.090008633388599,0.6962586716559852,0.08905520754983105],"W1":[[-0.05840514747873337,-0.07577142373570271,0.14447873339878783,-0.00644691017475661,-0.07678021214391391,0.031963470862536474,-0.02114066222799636,-0.1587771615006345,-0.43226384328805767,-0.2229265785936501,-0.16564167710789138,-0.41992361276625617,-0.25571774936654207,-0.055603860257429465,-0.4714547655213901,-0.15255521541022618,-0.2754016121776305,-0.19319107761272017,-0.16867910758487306],[0.15844246687642763,-0.3014543998763752,0.12559881074940127,-0.40426945309598844,0.26600278493295076,0.18982898326170392,0.17740897209254594,0.2390987056970712,0.13285102955857292,-0.15661361887600184,-0.14227747040593486,-0.06560539549732318,-0.7022062572724429,-0.10657827698035369,0.8115870508609876,0.6818655745533554,-0.28380259218171927,-0.06314128392919734,-0.07866460572804072],[0.15652245660057457,0.02467383874752135,-0.15542181549908743,0.4445578637226752,-0.27950140586586986,0.03508192237964907,0.34682006783123437,0.1144036157998664,0.5695127224962947,0.014051193707286488,-0.07309230422696002,0.5360064985284555,0.05090270563457728,-0.18576227329527553,0.02576155595599706,0.012272254417619923,0.29916429905178227,-0.05141830203357025,0.23624620443998431],[-0.005622233268383078,0.114384813365735,0.009202300849414638,-0.13602444279486672,-0.023561018318818308,0.10244162207383976,0.008856252374939737,-0.12789667690922166,-0.11714078133485445,0.17350012213645283,-0.2138269455773339,-0.19708552366485302,-0.5133171912640572,-0.03657534028798588,-0.4393424332368724,-0.6346752358381732,-0.13049597160978207,-0.24857252115373718,0.3297452118801472],[0.04700999422165237,0.22058046470662498,-0.31254171973742806,-0.01569432763723943,0.028668732571909602,0.010844974729410609,0.10556727827828098,-0.035855001200810706,-0.4196325136196355,0.5785777330088254,-0.1597479891209075,0.65083168061756,0.15589737428325207,0.19320873685328066,-0.46555748594015195,-0.36509537749218146,0.11179239204658618,0.0023278755863073083,0.4954747578295458],[-0.0613623605985469,-0.1267546859795071,-0.2664697990462746,-0.18714944400158154,0.13779311733574276,-0.2046716473497807,-0.18470118184485546,-0.26410543921657126,-0.0032553022170914788,0.23700514702965397,-0.21316965243050182,-0.31924952438421395,-0.05816757833901536,0.08014391007096118,-0.16329984005502926,0.02806869471036124,-0.4110057212719838,-0.3838014048664209,0.10421147061021332],[-0.07185804998749064,-0.08116019383615844,-0.09843100678268138,-0.24159860726235344,0.15947608846653577,-0.03308641539869995,-0.11910361818909426,0.22446326866006455,0.6717260936823659,0.2919365205380578,-0.071040489414792,-0.8708154826827589,0.14195042519555517,-0.0507215035665406,0.18311446582443086,-0.06939739671582904,0.3615044697184235,0.003753713051251201,-0.2664719974247668],[-0.17230953064849885,-0.15162532889565578,0.3156934391859757,-0.24744040661306238,0.20415646235751725,-0.3373301883656756,-0.09278071509684534,0.23144598408737813,0.24357483481039188,-0.44290236784078196,-0.008683050724183551,-0.41389534432964775,0.12975030237742766,-0.18233572824829136,0.7472225226423906,0.38335519745265473,-0.1741658119437227,0.016972496368423795,-0.8833863985246465],[-0.22623897476259575,0.1143017164988754,0.022074900302037577,-0.48492977148516564,0.2754155649945542,-0.23573927074020265,-0.16499396391171423,0.16448809824379226,0.3959583950173642,-0.5487723517176684,-0.052772029797024445,-0.9907875243679752,0.3057536128278594,-0.13635425215534663,0.7902121635767688,-0.33395413128456525,0.27545809112323627,0.13038789771551854,-0.6193561597803983],[-0.051107444673391664,-0.08487115930923164,-0.07413724868431708,0.03639053980722413,-0.14627319746822523,0.07256688990522495,0.23146803014116607,0.35936358568657867,-0.2552384372979002,0.5353621036112942,-0.20547283365892352,-0.243088007758019,0.20119133968329153,0.026677470840592125,-0.7592834749256074,0.23527507952123408,0.3270224235201271,-0.08012148314904773,0.20305343605762943],[0.06297934312930639,-0.1500022246753928,-0.27584127013596516,-0.1847184621094141,0.36594951995410335,-0.1399371938794133,-0.47946961231587165,0.03722549902489776,0.23430129066595587,-0.576405712003146,0.0429124528544545,0.2619144787963369,0.11104424641314603,0.09041326701424862,0.8123875346772326,0.2540133387905574,0.1022955378230466,-0.21669535546463423,-0.22968462186457603],[-0.031136099217583223,-0.01741762837056761,0.3039863770454847,0.06485549496261393,0.11807314257039095,0.03411446516486538,-0.40335860362983633,0.04063180301726696,-0.05905170309827607,-0.16527649754601578,0.5000976057747398,0.574387505658563,0.2053090222442023,-0.16688749856876392,0.4999105710553539,0.028550101929749744,0.5531355356112394,0.042467759034297545,0.047503000919736686],[0.27958935444164257,0.3970735113914476,-0.1329965802878958,0.32544997691420013,-0.11879413305517356,0.030346044312558242,-0.10451199851521067,0.006908758373001496,0.29148897476460084,-0.10745461023999216,0.14669552161296892,0.4126894288696733,0.12315088966512452,-0.16087710858242918,0.018384203448375262,0.057103291870912176,0.3453302587685252,0.13943135568909873,0.09046997955119421],[0.019215195957487802,-0.18745846382193068,0.05415607605806505,0.01410180005304264,-0.5449986968496829,0.052482221035809566,0.02213504252187846,0.3120829681769875,-0.31002017450999086,0.8121121012926912,0.03980744578503637,-0.024330776602831755,-0.3466873528660145,0.3094117407154628,0.07886237225516336,-0.17413206956983995,0.15701182182083956,0.306664818458613,0.4082440316798184]],"b1":[-0.48223211765264157,-0.41003650426519106,0.892542867927582,0.06067877942595225,-0.2375737354787184,-0.6426072123107684,0.6671324683797515,0.4990602008840518,0.4827577353650983,0.10600366913693773,-0.19319928725367846,0.5212992401376325,0.7297634256888347,0.6626594366678547],"W2":[[0.4477812017676681,0.6351198793880742,-0.5994517891976271,0.3298264233809941,0.05623368626177927,0.7672899326382145,-0.22570319432027447,0.19522140844470806,-0.09596897773595886,0.2605178305876408,-0.03185903046043785,-0.9820112826527447,-0.9381659350000806,-0.10507061899431908],[-0.45415418116021694,0.3891602330964629,0.576356565263534,-0.2582891558028423,-0.5739260696630165,-0.3826698175556531,0.5363375950582099,0.6270256003772184,1.4164845353787885,-0.6093620749428609,0.9273343433122496,0.4813420683834939,-0.09890073878782732,-0.6576691904333746],[-0.12031929054074134,-0.7084721883352892,0.739043120019107,0.1541513979410508,0.6488368354188118,-0.3846136341110341,-0.3555950221940546,-0.5719996068834953,-0.4971615973837083,0.22287760173755145,-0.6327872556565576,0.25651363856404846,0.13875435279136622,0.5159605401043875]],"b2":[-0.4007967473043518,0.19940120400816586,0.41886476677045476]};
+const TESTSTAT=[[0.937,1],[0.933,1],[0.87,1],[0.913,1],[0.859,1],[0.945,1],[0.874,1],[0.977,1],[0.942,1],[0.965,1],[0.932,1],[0.886,1],[0.91,1],[0.936,1],[0.878,1],[0.837,1],[0.968,1],[0.975,1],[0.908,1],[0.947,1],[0.979,1],[0.953,1],[0.957,1],[0.853,1],[0.936,1],[0.754,1],[0.923,1],[0.948,1],[0.942,1],[0.942,1],[0.92,1],[0.7,1],[0.921,1],[0.918,1],[0.934,1],[0.92,1],[0.931,1],[0.902,1],[0.872,1],[0.95,1],[0.946,1],[0.883,1],[0.983,1],[0.905,1],[0.975,1],[0.785,1],[0.949,1],[0.965,1],[0.94,1],[0.915,1],[0.95,1],[0.959,1],[0.985,1],[0.885,1],[0.979,0],[0.951,1],[0.95,1],[0.946,1],[0.939,1],[0.976,1],[0.927,1],[0.984,1],[0.824,1],[0.911,1],[0.922,1],[0.898,1],[0.816,1],[0.943,1],[0.951,1],[0.913,1],[0.869,1],[0.896,1],[0.883,1],[0.893,1],[0.968,1],[0.968,1],[1,1],[1,1],[0.998,1],[0.705,0],[0.985,1],[0.843,1],[0.999,1],[0.999,1],[0.841,0],[0.998,1],[0.999,1],[0.999,1],[1,1],[1,1],[0.917,1],[0.926,1],[0.904,1],[0.955,0],[0.999,1],[0.955,1],[0.814,0],[1,1],[1,1],[0.998,1],[0.999,1],[0.929,1],[0.997,1],[1,1],[0.999,1],[0.999,1],[0.776,1],[1,1],[1,1],[0.999,1],[0.998,1],[0.996,1],[0.829,1],[0.996,1],[1,1],[0.614,1],[0.6,0],[0.616,1],[0.999,1],[0.921,1],[0.998,1],[0.642,0],[0.732,1],[0.993,1],[0.511,0],[0.992,1],[1,1],[0.992,1],[0.983,1],[0.985,1],[0.999,1],[0.998,1],[0.991,1],[1,1],[0.999,1],[1,1],[0.999,1],[0.998,1],[0.822,0],[0.787,1],[0.994,1],[0.999,1],[0.998,1],[1,1],[0.996,1],[1,1],[1,1],[0.999,1],[0.61,0],[0.987,1],[0.999,1],[0.999,1],[0.986,1],[0.999,1],[0.99,1],[0.99,1],[0.995,1],[0.998,1],[0.998,1],[0.997,1],[0.999,1],[0.793,1],[0.998,1],[0.994,1],[0.983,1],[0.999,1],[1,1],[0.994,1],[0.954,1],[0.997,1],[0.999,1],[0.999,1],[0.911,1],[0.998,1],[1,1],[0.998,1],[0.996,1],[0.999,1],[0.478,0],[1,1],[0.999,1],[0.98,1],[0.991,1],[1,1],[1,1],[0.999,1],[0.998,1],[0.997,1],[0.999,1],[0.997,1],[0.686,1],[1,1],[0.992,1],[0.998,1],[0.999,1],[0.995,1],[0.983,1],[0.991,1],[0.954,1],[0.999,1],[0.998,1],[0.999,1],[0.892,1],[0.997,1],[0.999,1],[0.998,1],[0.959,1],[0.999,1],[0.999,1],[0.997,1],[0.996,1],[0.975,1],[0.894,1],[0.98,1],[0.999,1],[0.998,1],[0.999,1],[0.999,1],[0.998,1],[0.997,1],[0.987,1],[0.998,1],[0.988,1],[0.998,1],[0.993,1]]; // [최대 확률, 정답 여부] 합성 테스트 이미지 225장
+function predictFeatures(f){
+  const m=MODEL,z=f.map((v,j)=>(v-m.mean[j])/m.sd[j]);
+  const h=m.W1.map((w,i)=>{let a=m.b1[i];for(let j=0;j<z.length;j++)a+=w[j]*z[j];return Math.tanh(a)});
+  const o=m.W2.map((w,c)=>{let a=m.b2[c];for(let i=0;i<h.length;i++)a+=w[i]*h[i];return a});
+  const mx=Math.max(...o),e=o.map(v=>Math.exp(v-mx)),se=e.reduce((s,v)=>s+v,0);
+  return {p:e.map(v=>v/se),maxz:Math.max(...z.map(Math.abs))};
+}
+function classifyImage(source){
+  const e=featuresFromGray(grayFromSource(source)),r=predictFeatures(e.f);
+  return {p:r.p,maxz:r.maxz,T:e.T,nS:e.nS,nC:e.nC};
+}
+function testStats(th){
+  const errs=TESTSTAT.filter(s=>!s[1]);
+  return {n:TESTSTAT.length,flagged:TESTSTAT.filter(s=>s[0]<th).length,errs:errs.length,caught:errs.filter(s=>s[0]<th).length};
+}
+const OOD_Z=7;
+
+// ---------- 샘플 (테스트 세트에서 선택) ----------
 const LABEL={ok:'정상',scratch:'스크래치',contam:'오염'};
 const COLOR={ok:'var(--ok)',scratch:'var(--scratch)',contam:'var(--contam)'};
 // probs: [ok, scratch, contam]
-const SAMPLES=[
-  {id:'W-001',type:'ok',seed:101,p:[.97,.02,.01]},
-  {id:'W-002',type:'scratch',seed:202,p:[.04,.93,.03]},
-  {id:'W-003',type:'contam',seed:303,p:[.03,.05,.92]},
-  {id:'W-004',type:'ok',seed:104,p:[.91,.05,.04]},
-  {id:'W-005',type:'scratch',seed:205,p:[.12,.66,.22]},
-  {id:'W-006',type:'contam',seed:306,p:[.08,.31,.61]},
-  {id:'W-007',type:'ok',seed:107,p:[.78,.12,.10]},
-  {id:'W-008',type:'scratch',seed:208,p:[.02,.96,.02]},
-  {id:'W-009',type:'contam',seed:309,p:[.05,.09,.86]},
-  {id:'W-010',type:'ok',seed:110,p:[.95,.03,.02]},
-  {id:'W-011',type:'scratch',seed:211,p:[.09,.74,.17]},
-  {id:'W-012',type:'contam',seed:312,p:[.02,.04,.94]},
-];
+// 합성 테스트 세트(학습에 쓰지 않은 이미지)에서 신뢰도 구간별로 고른 12장. 분류 결과는 모델이 실제로 계산한 값입니다.
+const SAMPLE_DEF=[[478,'ok'],[100427,'scratch'],[200442,'contam'],[455,'ok'],[100466,'scratch'],[200466,'contam'],[457,'ok'],[100498,'scratch'],[200451,'contam'],[492,'ok'],[100499,'scratch'],[200454,'contam']];
+const SAMPLES=SAMPLE_DEF.map((d,i)=>{
+  const c=document.createElement('canvas');c.width=600;c.height=600;
+  const boxes=genWafer(c,d[1],d[0]),r=classifyImage(c);
+  return {id:'T-'+String(i+1).padStart(2,'0'),type:d[1],seed:d[0],p:r.p,canvas:c,boxes:boxes};
+});
 function pred(s){const k=['ok','scratch','contam'];let b=0;s.p.forEach((v,i)=>{if(v>s.p[b])b=i});return{cls:k[b],conf:s.p[b]}}
 var TH=.85;
 function prio(c){return c<TH-.15?'high':c<TH?'mid':'low'}
@@ -632,7 +908,7 @@ function select(i){
   curIdx=i;
   const vc=document.getElementById('viewCanvas'),bxs=paintSample(vc,s)||[];
   if(document.getElementById('boxToggle').checked)drawBoxes(vc,bxs);
-  const bd=document.getElementById('modeBadge');bd.textContent='목업 데모 · 실제 모델 추론이 아닙니다';bd.classList.remove('real');
+  const bd=document.getElementById('modeBadge');bd.textContent='학습한 모델의 실제 출력 · 합성 테스트 이미지';bd.classList.add('real');
   document.getElementById('viewName').textContent='샘플 '+s.id;
   const names=['ok','scratch','contam'];
   let html='<div class="verdict"><span class="pill '+(p.cls==='contam'?'contam':p.cls)+'">'+LABEL[p.cls]+'</span><span style="font-size:22px;font-weight:800">'+Math.round(p.conf*100)+'%</span><span style="color:var(--muted);font-size:14px">신뢰도</span></div>';
@@ -643,6 +919,7 @@ function select(i){
   html+= pr==='low'
     ? '<div class="flag good">신뢰도가 충분해 바로 결과를 사용해도 됩니다.</div>'
     : '<div class="flag warn">신뢰도가 '+(pr==='high'?'매우 ':'')+'낮아 <b>재검사를 권장</b>합니다. ('+PRIO_TXT[pr]+')</div>';
+  html+='<div class="metric">정답 라벨: <b>'+LABEL[s.type]+'</b> · 모델 예측: <b>'+LABEL[p.cls]+'</b> '+(s.type===p.cls?'(일치)':'<span style="color:#a5322a;font-weight:700">(불일치, 오분류)</span>')+'<br>합성 테스트 세트에서 고른 이미지이며, 학습에는 사용하지 않았습니다.</div>';
   document.getElementById('resultBody').innerHTML=html;
 }
 document.getElementById('resultBody').innerHTML='<p style="color:var(--muted)">왼쪽에서 샘플 이미지를 선택해 보세요.</p>';
@@ -650,30 +927,33 @@ document.getElementById('boxToggle').onchange=()=>{if(curIdx>=0)select(curIdx)};
 select(1);
 
 // ---------- batch + priority (기준 슬라이더 연동) ----------
-const rows=SAMPLES.map(s=>{const p=pred(s);return{id:s.id,cls:p.cls,conf:p.conf,pr:prio(p.conf)}});
+const rows=SAMPLES.map(s=>{const p=pred(s);return{id:s.id,truth:s.type,cls:p.cls,conf:p.conf,pr:prio(p.conf)}});
 const cnt={ok:0,scratch:0,contam:0};rows.forEach(r=>cnt[r.cls]++);
 var redo=0;
+function okMark(r){return r.truth===r.cls?'<span style="color:var(--ok);font-weight:700">일치</span>':'<span style="color:#a5322a;font-weight:700">불일치</span>'}
 function renderBatch(){
   rows.forEach(r=>r.pr=prio(r.conf));
   redo=rows.filter(r=>r.pr!=='low').length;
+  const wrong=rows.filter(r=>r.truth!==r.cls).length,wrongCaught=rows.filter(r=>r.truth!==r.cls&&r.pr!=='low').length;
   document.getElementById('summary').innerHTML=
    '<div class="stat"><b>'+rows.length+'</b><span>전체 이미지</span></div>'+
-   '<div class="stat"><b style="color:var(--ok)">'+cnt.ok+'</b><span>정상</span></div>'+
-   '<div class="stat"><b style="color:var(--scratch)">'+cnt.scratch+'</b><span>스크래치</span></div>'+
-   '<div class="stat"><b style="color:var(--contam)">'+cnt.contam+'</b><span>오염</span></div>';
-  document.getElementById('batchTable').innerHTML='<tr><th>이미지</th><th>분류 결과</th><th>신뢰도</th><th>재검사</th></tr>'+rows.map(r=>
-   '<tr><td>'+r.id+'</td><td><span class="dot" style="background:'+COLOR[r.cls]+'"></span>'+LABEL[r.cls]+'</td><td>'+Math.round(r.conf*100)+'%</td><td><span class="prio '+r.pr+'">'+PRIO_TXT[r.pr]+'</span></td></tr>').join('');
+   '<div class="stat"><b style="color:var(--ok)">'+cnt.ok+'</b><span>정상으로 분류</span></div>'+
+   '<div class="stat"><b style="color:var(--scratch)">'+cnt.scratch+'</b><span>스크래치로 분류</span></div>'+
+   '<div class="stat"><b style="color:var(--contam)">'+cnt.contam+'</b><span>오염으로 분류</span></div>';
+  document.getElementById('batchTable').innerHTML='<tr><th>이미지</th><th>정답</th><th>모델 예측</th><th>정답 여부</th><th>신뢰도</th><th>재검사</th></tr>'+rows.map(r=>
+   '<tr><td>'+r.id+'</td><td>'+LABEL[r.truth]+'</td><td><span class="dot" style="background:'+COLOR[r.cls]+'"></span>'+LABEL[r.cls]+'</td><td>'+okMark(r)+'</td><td>'+Math.round(r.conf*100)+'%</td><td><span class="prio '+r.pr+'">'+PRIO_TXT[r.pr]+'</span></td></tr>').join('');
   const sorted=rows.filter(r=>r.pr!=='low').sort((a,b)=>a.conf-b.conf);
-  document.getElementById('prioTable').innerHTML='<tr><th>순위</th><th>이미지</th><th>분류 결과</th><th>신뢰도</th><th>조치</th></tr>'+(sorted.length?sorted.map((r,i)=>
-   '<tr><td>'+(i+1)+'</td><td>'+r.id+'</td><td><span class="dot" style="background:'+COLOR[r.cls]+'"></span>'+LABEL[r.cls]+'</td><td>'+Math.round(r.conf*100)+'%</td><td><span class="prio '+r.pr+'">'+PRIO_TXT[r.pr]+'</span></td></tr>').join(''):'<tr><td colspan="5" style="color:var(--muted)">기준을 넘지 못한 이미지가 없습니다.</td></tr>');
+  document.getElementById('prioTable').innerHTML='<tr><th>순위</th><th>이미지</th><th>정답</th><th>모델 예측</th><th>신뢰도</th><th>조치</th></tr>'+(sorted.length?sorted.map((r,i)=>
+   '<tr><td>'+(i+1)+'</td><td>'+r.id+'</td><td>'+LABEL[r.truth]+'</td><td><span class="dot" style="background:'+COLOR[r.cls]+'"></span>'+LABEL[r.cls]+' '+(r.truth===r.cls?'':'<span style="color:#a5322a;font-weight:700">(오분류)</span>')+'</td><td>'+Math.round(r.conf*100)+'%</td><td><span class="prio '+r.pr+'">'+PRIO_TXT[r.pr]+'</span></td></tr>').join(''):'<tr><td colspan="6" style="color:var(--muted)">기준을 넘지 못한 이미지가 없습니다.</td></tr>');
   document.getElementById('thOut').textContent=Math.round(TH*100)+'%';
-  document.getElementById('thInfo').innerHTML='기준 '+Math.round(TH*100)+'% 에서는 전체 '+rows.length+'장 중 <b>'+redo+'장('+Math.round(redo/rows.length*100)+'%)</b>만 사람이 다시 확인합니다. 기준을 높이면 더 꼼꼼해지지만 확인할 이미지가 늘어납니다.';
+  const ts=testStats(TH);
+  document.getElementById('thInfo').innerHTML='위 12장에서는 <b>'+redo+'장</b>이 재검사 대상이고, 오분류 '+wrong+'장 중 '+wrongCaught+'장이 여기에 걸립니다.<br>합성 테스트 이미지 전체 '+ts.n+'장 기준으로는 <b>'+ts.flagged+'장('+(ts.flagged/ts.n*100).toFixed(1)+'%)</b>만 사람이 다시 보면 되고, 모델이 틀린 '+ts.errs+'장 중 <b>'+ts.caught+'장</b>을 걸러냅니다. 기준을 높이면 더 많이 걸러내지만 확인할 이미지가 늘어납니다.';
   if(window.syncCalc)window.syncCalc();
 }
 document.getElementById('th').addEventListener('input',e=>{TH=+e.target.value/100;renderBatch();if(curIdx>=0)select(curIdx)});
 renderBatch();
 document.getElementById('csvBtn').onclick=()=>{
-  const csv='\uFEFF이미지,분류결과,신뢰도(%),재검사\n'+rows.map(r=>[r.id,LABEL[r.cls],Math.round(r.conf*100),PRIO_TXT[r.pr]].join(',')).join('\n');
+  const csv='\uFEFF이미지,정답,모델예측,정답여부,신뢰도(%),재검사\n'+rows.map(r=>[r.id,LABEL[r.truth],LABEL[r.cls],r.truth===r.cls?'일치':'불일치',Math.round(r.conf*100),PRIO_TXT[r.pr]].join(',')).join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='scanwafer_batch_result.csv';a.click();
 };
 
@@ -687,72 +967,14 @@ function drawCover(canvas,img){
 }
 var imgCache={};
 function paintSample(canvas,s){
+  if(s.canvas){canvas.getContext('2d').drawImage(s.canvas,0,0,canvas.width,canvas.height);return s.boxes}
   if(!s.src){return drawWafer(canvas,s.type,s.seed)}
   const draw=im=>drawCover(canvas,im);
   if(imgCache[s.src]){draw(imgCache[s.src]);return}
   const im=new Image();im.onload=()=>{imgCache[s.src]=im;draw(im)};im.onerror=()=>drawWafer(canvas,s.type,s.seed);im.src=s.src;
 }
 
-// ---------- 업로드 이미지 분석 (규칙 기반 프로토타입, 학습 모델 아님) ----------
-const CFG={TH_MIN:10,TH_K:3.5,MIN_AREA:4,ELONG:3.2,MIN_LEN:10,GRID_RUN:28,BASE:2,K_S:5,K_C:2};
-
-function analyzeImage(source){
-  const N=160;
-  const c=document.createElement('canvas');c.width=N;c.height=N;
-  const x=c.getContext('2d',{willReadFrequently:true});
-  const sw=source.naturalWidth||source.width,sh=source.naturalHeight||source.height,m=Math.min(sw,sh);
-  x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(source,(sw-m)/2,(sh-m)/2,m,m,0,0,N,N);
-  const d=x.getImageData(0,0,N,N).data,g=new Float32Array(N*N);
-  for(let i=0;i<N*N;i++)g[i]=0.299*d[i*4]+0.587*d[i*4+1]+0.114*d[i*4+2];
-  // background estimate: box blur via integral image
-  const I=new Float64Array((N+1)*(N+1));
-  for(let y=0;y<N;y++){let row=0;for(let xx=0;xx<N;xx++){row+=g[y*N+xx];I[(y+1)*(N+1)+xx+1]=I[y*(N+1)+xx+1]+row}}
-  const K=7,res=new Float32Array(N*N),cx=N/2,cy=N/2,Rm=N*0.36;
-  const mask=new Uint8Array(N*N);let mcount=0;
-  for(let y=0;y<N;y++)for(let xx=0;xx<N;xx++){
-    const x0=Math.max(0,xx-K),x1=Math.min(N,xx+K+1),y0=Math.max(0,y-K),y1=Math.min(N,y+K+1);
-    const s=I[y1*(N+1)+x1]-I[y0*(N+1)+x1]-I[y1*(N+1)+x0]+I[y0*(N+1)+x0];
-    res[y*N+xx]=g[y*N+xx]-s/((x1-x0)*(y1-y0));
-    if((xx-cx)**2+(y-cy)**2<Rm*Rm){mask[y*N+xx]=1;mcount++}
-  }
-  // robust noise level (median absolute residual)
-  const vals=[];for(let i=0;i<N*N;i++)if(mask[i])vals.push(Math.abs(res[i]));
-  vals.sort((a,b)=>a-b);const mad=vals[Math.floor(vals.length/2)]||0;
-  const T=Math.max(CFG.TH_MIN,mad*CFG.TH_K);
-  const an=new Uint8Array(N*N);
-  for(let i=0;i<N*N;i++)if(mask[i]&&Math.abs(res[i])>T)an[i]=1;
-
-  // 다이 격자선(수평·수직으로 길게 이어진 선)은 불량이 아니므로 제외
-  const cut=new Uint8Array(N*N);
-  for(let y=0;y<N;y++){let s=0;for(let xx=0;xx<=N;xx++){if(xx<N&&an[y*N+xx])continue;if(xx-s>=CFG.GRID_RUN)for(let k=s;k<xx;k++)cut[y*N+k]=1;s=xx+1}}
-  for(let xx=0;xx<N;xx++){let s=0;for(let y=0;y<=N;y++){if(y<N&&an[y*N+xx])continue;if(y-s>=CFG.GRID_RUN)for(let k=s;k<y;k++)cut[k*N+xx]=1;s=y+1}}
-  for(let i=0;i<N*N;i++)if(cut[i])an[i]=0;
-  // 끊어진 가는 선을 이어 붙이기 위해 이상 영역을 1픽셀 팽창
-  const dl=new Uint8Array(N*N);
-  for(let y=0;y<N;y++)for(let xx=0;xx<N;xx++){if(!an[y*N+xx])continue;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const qx=xx+dx,qy=y+dy;if(qx>=0&&qy>=0&&qx<N&&qy<N)dl[qy*N+qx]=1}}
-  // connected components
-  const seen=new Uint8Array(N*N);let scratchLen=0,contamArea=0,nS=0,nC=0;
-  for(let i=0;i<N*N;i++){
-    if(!dl[i]||seen[i])continue;
-    const st=[i];seen[i]=1;const pts=[];
-    while(st.length){const p=st.pop();pts.push(p);const px=p%N,py=(p/N)|0;
-      for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const qx=px+dx,qy=py+dy;if(qx<0||qy<0||qx>=N||qy>=N)continue;const q=qy*N+qx;if(dl[q]&&!seen[q]){seen[q]=1;st.push(q)}}}
-    const n0=pts.reduce((acc,p)=>acc+an[p],0);
-    if(n0<CFG.MIN_AREA)continue;
-    let mx=0,my=0;pts.forEach(p=>{mx+=p%N;my+=(p/N)|0});mx/=pts.length;my/=pts.length;
-    let sxx=0,syy=0,sxy=0;pts.forEach(p=>{const a=(p%N)-mx,b=((p/N)|0)-my;sxx+=a*a;syy+=b*b;sxy+=a*b});
-    sxx/=pts.length;syy/=pts.length;sxy/=pts.length;
-    const tr=sxx+syy,det=sxx*syy-sxy*sxy,disc=Math.sqrt(Math.max(0,tr*tr/4-det));
-    const l1=tr/2+disc,l2=Math.max(tr/2-disc,0.15);
-    const elong=Math.sqrt(l1/l2),len=Math.sqrt(l1)*3.46;
-    if(elong>=CFG.ELONG&&len>=CFG.MIN_LEN){scratchLen+=len;nS++}
-    else if(elong<CFG.ELONG){contamArea+=n0;nC++}
-  }
-  const sS=scratchLen/(N*0.45),sC=contamArea/(mcount*0.012);
-  const z=[CFG.BASE,CFG.K_S*Math.min(sS,3),CFG.K_C*Math.min(sC,3)];
-  const mx2=Math.max(...z),e=z.map(v=>Math.exp(v-mx2)),se=e[0]+e[1]+e[2];
-  return{p:e.map(v=>v/se),metrics:{T:+T.toFixed(1),scratchLen:+scratchLen.toFixed(1),nS,contamArea,nC,sS:+sS.toFixed(2),sC:+sC.toFixed(2)}};
-}
+// ---------- 업로드 이미지 분석 (학습한 모델 사용) ----------
 const dz=document.getElementById('dropZone'),fi=document.getElementById('fileInput');
 document.getElementById('uploadBtn').onclick=()=>fi.click();
 fi.onchange=()=>{if(fi.files[0])handleFile(fi.files[0]);fi.value=''};
@@ -767,7 +989,7 @@ function handleFile(file){
     document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('active'));
     drawCover(document.getElementById('viewCanvas'),im);
     curIdx=-1;document.getElementById('viewName').textContent='업로드: '+file.name;
-    const a=analyzeImage(im);URL.revokeObjectURL(url);
+    const a=classifyImage(im);URL.revokeObjectURL(url);
     showAnalysis(a);
   };
   im.onerror=()=>{URL.revokeObjectURL(url);body.innerHTML='<div class="flag warn">이미지를 읽지 못했습니다. 다른 파일로 시도해 주세요.</div>'};
@@ -775,24 +997,20 @@ function handleFile(file){
 }
 function showAnalysis(a){
   const k=['ok','scratch','contam'];
-  const badge=document.getElementById('modeBadge');badge.textContent='프로토타입 분석 · 학습 모델이 아닌 규칙 기반 결과';badge.classList.add('real');
+  const badge=document.getElementById('modeBadge');badge.textContent='학습한 모델의 실제 출력 · 합성 이미지로 학습';badge.classList.add('real');
   const body=document.getElementById('resultBody');
   let mx=0;a.p.forEach((v,i)=>{if(v>a.p[mx])mx=i});
-  // 판정 보류 조건: 패턴이 복잡하거나 대비가 매우 큰 이미지, 또는 점수 차이가 작은 경우
   let hold=null;
-  if(a.metrics.T>35)hold='이미지의 패턴이 복잡하거나 대비가 매우 커서, 이 프로토타입이 불량과 정상 패턴을 구분할 수 없습니다. (예: 회로가 보이는 칩 이미지, 모서리 깨짐)';
+  if(a.maxz>OOD_Z)hold='이 이미지는 모델이 학습한 합성 웨이퍼 이미지와 특징이 크게 다릅니다. (특징값이 학습 데이터 범위를 표준편차의 '+a.maxz.toFixed(1)+'배 벗어남, 기준 '+OOD_Z+'배) 모르는 이미지는 모른다고 답하도록 만든 안전장치입니다.';
   else if(a.p[mx]<0.5)hold='세 가지 클래스 점수 차이가 작아 어느 쪽인지 판단하기 어렵습니다.';
   if(hold){
-    body.innerHTML='<div class="verdict"><span class="pill hold">판정 보류</span></div><div class="hold-box">'+hold+'<br><br><b>사람이 직접 확인해 주세요.</b> 이 도구는 웨이퍼 표면의 스크래치·오염만 대상으로 하며, 정확도는 검증되지 않았습니다.</div><div class="metric">분석 근거: 가늘고 긴 이상 영역 '+a.metrics.nS+'개, 덩어리형 이상 영역 '+a.metrics.nC+'개</div>';
+    body.innerHTML='<div class="verdict"><span class="pill hold">판정 보류</span></div><div class="hold-box">'+hold+'<br><br><b>사람이 직접 확인해 주세요.</b> 이 모델은 합성 웨이퍼 이미지로만 학습했고, 실제 장비 이미지에서의 정확도는 검증되지 않았습니다.</div>';
     return;
   }
-  // 검증 전 프로토타입이므로 확신을 낮춰서 표시 (균등 분포 쪽으로 보정)
-  const q=a.p.map(v=>0.6*v+0.4/3);
-  const cls=k[mx],conf=q[mx];
-  let html='<div class="verdict"><span class="pill '+cls+'">'+LABEL[cls]+' (추정)</span><span style="font-size:22px;font-weight:800">'+Math.round(conf*100)+'%</span><span style="color:var(--muted);font-size:14px">보정된 점수</span></div>';
-  k.forEach((n,i)=>{html+='<div class="bar"><div class="lab"><span>'+LABEL[n]+'</span><span>'+Math.round(q[i]*100)+'%</span></div><div class="track"><div class="fill" style="width:'+(q[i]*100)+'%;background:'+COLOR[n]+'"></div></div></div>'});
-  html+='<div class="flag warn">검증 전 프로토타입이므로 결과는 <b>참고용</b>입니다. 사람의 확인을 권장합니다.</div>';
-  html+='<div class="metric">분석 근거: 가늘고 긴 이상 영역 '+a.metrics.nS+'개, 덩어리형 이상 영역 '+a.metrics.nC+'개 (이미지 중앙 원형 영역 기준, 수평·수직 격자선 제외).<br>※ 점수는 실제 확률이 아니며, 실제 웨이퍼 사진으로 검증되지 않았습니다.</div>';
+  const cls=k[mx],conf=a.p[mx];
+  let html='<div class="verdict"><span class="pill '+cls+'">'+LABEL[cls]+'</span><span style="font-size:22px;font-weight:800">'+Math.round(conf*100)+'%</span><span style="color:var(--muted);font-size:14px">신뢰도</span></div>';
+  k.forEach((n,i)=>{html+='<div class="bar"><div class="lab"><span>'+LABEL[n]+'</span><span>'+Math.round(a.p[i]*100)+'%</span></div><div class="track"><div class="fill" style="width:'+(a.p[i]*100)+'%;background:'+COLOR[n]+'"></div></div></div>'});
+  html+='<div class="flag warn">합성 이미지로 학습한 모델이라 실제 사진에서는 <b>참고용</b>입니다. 사람의 확인을 권장합니다.</div>';
   body.innerHTML=html;
 }
 
@@ -821,8 +1039,8 @@ const INTERVIEWS=[];
     document.getElementById('cOut').textContent=full?Math.round(save/full*100)+'% 감소':'-';
   }
   window.syncCalc=function(){
-    const base=Math.round(redo/rows.length*100);
-    document.getElementById('cBase').textContent=rows.length+'장 중 '+redo+'장 = '+base+'%, 슬라이더와 연동';
+    const ts=testStats(TH),base=Math.round(ts.flagged/ts.n*100);
+    document.getElementById('cBase').textContent='합성 테스트 '+ts.n+'장 중 '+ts.flagged+'장 = '+base+'%, 슬라이더와 연동';
     i3.value=base;calc();
   };
   [i1,i2,i3].forEach(i=>i.addEventListener('input',calc));
@@ -836,7 +1054,7 @@ const INTERVIEWS=[];
   const picks=[0,1,2,5];
   const slides=picks.map(i=>{
     const s=SAMPLES[i],c=document.createElement('canvas');c.width=600;c.height=600;c.setAttribute('aria-hidden','true');
-    const bx=drawWafer(c,s.type,s.seed)||[];if(s.type!=='ok')drawBoxes(c,bx);
+    c.getContext('2d').drawImage(s.canvas,0,0);if(s.type!=='ok')drawBoxes(c,s.boxes);
     stage.insertBefore(c,scan);return{c,s,p:pred(s)};
   });
   const dotsBox=document.getElementById('scDots'),pill=document.getElementById('scPill'),conf=document.getElementById('scConf'),note=document.getElementById('scNote'),hud=document.getElementById('scHud');
@@ -855,7 +1073,7 @@ const INTERVIEWS=[];
     const pr=prio(o.p.conf);
     note.textContent=pr==='low'?'확인 불필요':PRIO_TXT[pr]+' · 신뢰도 낮음';
     note.className='sc-note'+(pr==='low'?'':' warn');
-    hud.textContent='SAMPLE '+o.s.id+' · DEMO';
+    hud.textContent='SAMPLE '+o.s.id+' · TEST SET';
   }
   document.getElementById('scPrev').onclick=()=>show(cur-1);
   document.getElementById('scNext').onclick=()=>show(cur+1);
@@ -869,6 +1087,20 @@ const INTERVIEWS=[];
   window.__sc={show:show,get cur(){return cur}};
 })();
 
+// ---------- 합성 데이터셋 갤러리 ----------
+window.buildGallery=function(force){
+  const box=document.getElementById('dsGal');if(!box||(box.dataset.done&&!force))return;
+  box.dataset.done='1';box.innerHTML='';
+  [['ok','정상'],['scratch','스크래치'],['contam','오염']].forEach(([t,n])=>{
+    const row=document.createElement('div');row.className='gal-row';
+    const h=document.createElement('div');h.innerHTML='<span class="pill '+t+'">'+n+'</span>';row.appendChild(h);
+    const wrap=document.createElement('div');wrap.className='gal-imgs';
+    for(let k=0;k<6;k++){const c=document.createElement('canvas');c.width=200;c.height=200;c.setAttribute('role','img');c.setAttribute('aria-label',n+' 합성 이미지 예시');genWafer(c,t,500000+Math.floor(Math.random()*900000));wrap.appendChild(c)}
+    row.appendChild(wrap);box.appendChild(row);
+  });
+};
+document.getElementById('dsRegen').onclick=()=>window.buildGallery(true);
+
 // ---------- 페이지 전환 (해시 라우터) ----------
 (function(){
   const PAGES={
@@ -876,11 +1108,12 @@ const INTERVIEWS=[];
     demo:{title:'분류 체험',subs:[['demo','분류 체험']]},
     types:{title:'불량 유형',subs:[['types','불량 유형']]},
     results:{title:'결과 분석',subs:[['batch','배치 결과 + CSV'],['priority','재검사 우선순위']]},
+    data:{title:'데이터·모델',subs:[['dataset','데이터셋 설계'],['model','모델·성능'],['gap','실제 이미지 시험']]},
     value:{title:'활용·효과',subs:[['icore','아이코어 연계'],['impact','효과·로드맵']]},
     about:{title:'프로젝트',subs:[['problem','문제 정의'],['limits','한계와 확인 필요'],['team','팀·출처']]}
   };
   var focusTabs=false;
-  const allSecs=['problem','demo','types','batch','priority','icore','impact','limits','team'];
+  const allSecs=['problem','demo','types','batch','priority','dataset','model','gap','icore','impact','limits','team'];
   const tabsWrap=document.getElementById('subtabsWrap'),tabs=document.getElementById('subtabs');
   const homeView=document.querySelector('[data-view="home"]');
   allSecs.forEach(id=>{const s=document.getElementById(id);if(s)s.style.display='none'});
@@ -909,6 +1142,7 @@ const INTERVIEWS=[];
       if(focusTabs){const sel=tabs.querySelector('[aria-selected=true]');if(sel)sel.focus();focusTabs=false}
     }else{tabsWrap.style.display='none';tabs.innerHTML=''}
     document.title=(page==='home'?'ScanWafer | 웨이퍼·칩 표면 불량 이미지 분류기':PAGES[page].title+' | ScanWafer');
+    if(sub==='dataset'&&window.buildGallery)window.buildGallery();
     if(!focusTabs)window.scrollTo(0,0);
   }
   window.addEventListener('hashchange',render);
