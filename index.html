@@ -511,8 +511,17 @@
       <div class="card"><div class="num">02</div><h3>판단 기준의 편차</h3><p>같은 이미지도 담당자에 따라 스크래치와 오염을 다르게 볼 수 있습니다.</p></div>
       <div class="card"><div class="num">03</div><h3>쉬운 것도 사람이 전부 확인</h3><p>누가 봐도 정상이거나 확실한 불량인 이미지까지 모두 사람이 하나씩 봐야 해서, 정말 정밀한 측정이 필요한 이미지에 쓸 시간이 줄어듭니다.</p></div>
     </div>
-    <p class="note">※ 위 내용은 팀의 문제 가설입니다. 현장 인터뷰나 관찰로 아직 검증하지 않았습니다. (한계 섹션 참고)</p>
-    <div class="card interview" id="interviewBox"><h3>현장 의견 (인터뷰)</h3><div id="interviewBody"></div></div>
+    <p class="note">※ 위 내용은 팀이 정리한 문제 정의이며, 현장 조사가 아니라 아래 논문·문헌을 근거로 합니다.</p>
+    <div class="card fact" id="litBox"><span class="label fact">논문·문헌 근거 (현장 조사는 하지 않았습니다)</span>
+      <h3>이 문제는 논문이 먼저 말하고 있습니다</h3>
+      <p style="color:var(--muted);font-size:14.5px;margin-bottom:10px">이번 프로젝트는 하루 만에 진행해서 현장 방문이나 인터뷰를 하지 않았습니다. 대신 문제 정의를 아래 문헌에서 확인한 내용에 근거해 정리했습니다. (표현은 팀이 요약한 것이고, 원문 링크를 달았습니다.)</p>
+      <ul>
+        <li><b>수작업 확인의 부담 (01):</b> 숙련된 엔지니어는 웨이퍼 맵의 불량 패턴을 보고 원인을 찾을 수 있지만, 이것은 시간이 많이 걸리는 과정이라 컴퓨터 지원 도구가 필요하다고 설명합니다. 반도체 웨이퍼 표면 검사가 사람 전문가의 수작업 검토에 의존하며 느리고 부정확해지기 쉽다는 설명도 있습니다. — Wu·Jang·Chen, IEEE TSM 2015 (<a href="http://mirlab.org/jang/research/publication/myPaper/Wafer%20Map%20Failure%20Pattern%20Recognition%20and%20Similarity%20Ranking%20for%20Large-scale%20Datasets.pdf" target="_blank" rel="noopener">PDF</a>) · <i>Microelectronic Engineering</i> 2005, "Defect detection on semiconductor wafer surfaces" (<a href="https://doi.org/10.1016/j.mee.2004.12.003" target="_blank" rel="noopener">DOI</a>)</li>
+        <li><b>사람의 판단 편차와 피로 (02):</b> 사람이 직접 검사하는 방식은 작업 시간이 많이 들고, 주관이나 피로가 정확도를 떨어뜨릴 수 있다고 정리됩니다. (SEM 이미지 검사 문헌 조사이며, 표면 이미지 전반의 일반적 설명으로 인용했습니다.) — "Automated Semiconductor Defect Inspection in Scanning Electron Microscope Images: a Systematic Review" (<a href="https://arxiv.org/html/2308.08376v2" target="_blank" rel="noopener">arXiv:2308.08376</a>)</li>
+        <li><b>자동화의 필요 (01):</b> 웨이퍼 맵 패턴의 시각 검사는 지금도 사람이 수동으로 하는 경우가 많고, 이를 자동으로 분류해 인력과 시간을 줄이려는 연구가 이어지고 있습니다. — Sensors 2023, 23(4):1926 (<a href="https://www.mdpi.com/1424-8220/23/4/1926" target="_blank" rel="noopener">MDPI</a>)</li>
+        <li><b>필터 방식의 근거 (03):</b> 신뢰도가 낮을 때는 답하지 않고 넘기는 방식(reject option)으로 답한 것의 오류율을 낮출 수 있다는 연구가 있고, 우리 필터는 이 방법을 적용했습니다. (데이터·모델 &gt; 신뢰도 향상) — Chow 1970, Geifman &amp; El-Yaniv, NeurIPS 2017 (<a href="https://arxiv.org/abs/1705.08500" target="_blank" rel="noopener">arXiv:1705.08500</a>)</li>
+      </ul>
+      <p class="note" style="margin-top:10px">※ 위 문헌에서 "사람이 이미지 한 장을 확인하는 데 몇 초 걸린다" 같은 <b>시간 수치는 확인하지 못했습니다.</b> 그래서 기대 효과 계산기의 시간은 근거 없는 가정값으로 표시했습니다.</p></div>
   </div>
 </section>
 
@@ -665,7 +674,7 @@
     </div>
     <h3 style="font-size:17px;margin:6px 0 10px">사람이 정밀하게 볼 이미지 (위 12장 중)</h3>
     <div style="overflow-x:auto"><table id="prioTable"></table></div>
-    <p class="note">※ 기본값 93%는 검증 이미지에서 "자동 분석된 것의 정확도 98% 이상"을 목표로 골라 둔 값(92.7%)을 반올림한 것입니다. 목표 정확도는 우리가 정한 예시이고, 실제 기준은 현장 의견을 받아 정해야 합니다. (근거: 데이터·모델 > 신뢰도 향상)</p>
+    <p class="note">※ 기본값 93%는 검증 이미지에서 "자동 분석된 것의 정확도 98% 이상"을 목표로 골라 둔 값(92.7%)을 반올림한 것입니다. 목표 정확도는 우리가 정한 예시이고, 실제 기준은 사용 목적(허용할 오류율)에 따라 정해야 합니다. (근거: 데이터·모델 > 신뢰도 향상)</p>
   </div>
 </section>
 
@@ -718,7 +727,7 @@
         <div class="res-row"><span>전부 사람이 확인할 때 (분)</span><b id="cFull">-</b></div>
         <div class="res-row"><span>필터 후 남은 이미지만 확인할 때 (분)</span><b id="cPart">-</b></div>
         <div class="res-row"><span>절감 (분)</span><b id="cSave">-</b></div>
-        <p class="note">※ 가정 기반 단순 계산입니다. "자동 분석된 결과는 맞다"는 전제이며, 분류 처리 시간과 자동 분석에 섞여 들어가는 오분류는 반영하지 않았습니다. 자동 분석의 정확도는 합성 테스트에서 약 98.8%, 더 어려운 별도 합성 샘플 1,000장에서는 약 90%였습니다(데이터·모델 > 신뢰도 향상). 입력값은 현장 확인 전의 예시입니다.</p>
+        <p class="note">※ 가정 기반 단순 계산입니다. "자동 분석된 결과는 맞다"는 전제이며, 분류 처리 시간과 자동 분석에 섞여 들어가는 오분류는 반영하지 않았습니다. 자동 분석의 정확도는 합성 테스트에서 약 98.8%, 더 어려운 별도 합성 샘플 1,000장에서는 약 90%였습니다(데이터·모델 > 신뢰도 향상). 입력값은 근거 자료가 없는 가정값입니다. (논문에서 사람이 이미지 한 장을 확인하는 시간은 확인하지 못했습니다.)</p>
       </div>
     </div>
 
@@ -726,7 +735,7 @@
     <div class="road">
       <div class="card now"><div class="step">STEP 1 · 지금</div><h3>구상과 프로토타입</h3><p>합성 데이터셋 설계, 특징 기반 신경망 학습(합성 테스트 정확도 95.1%), 신뢰도 기반 자동 분석 필터(여러 장 한꺼번에), 논문 방법 적용, 브라우저에서 직접 실행.</p></div>
       <div class="card"><div class="step">STEP 2</div><h3>데이터와 모델</h3><p>실제 장비 이미지(공개 데이터 또는 협의된 이미지)를 확보해 재학습하고, 정확도·클래스별 재현율·혼동행렬로 다시 평가합니다.</p></div>
-      <div class="card"><div class="step">STEP 3</div><h3>현장 검증</h3><p>검사장비 엔지니어·품질 담당자 인터뷰로 문제 가설과 자동 분석 허용 기준(신뢰도 93%와 목표 정확도)을 확인하고 조정합니다.</p></div>
+      <div class="card"><div class="step">STEP 3</div><h3>기준값 조정</h3><p>실제 사용 환경에서 허용할 오류율에 맞춰 자동 분석 기준(신뢰도 93%와 목표 정확도)을 조정합니다. 이번 프로젝트는 하루 만에 진행해 현장 조사 없이 문헌을 근거로 했고, 현장 검증은 후속 과제입니다.</p></div>
       <div class="card"><div class="step">STEP 4</div><h3>연동과 확장</h3><p>이미지 폴더·검사장비 연동, 결과 CSV의 API화, 클래스 추가와 조명·초점 조건 비교 기능으로 확장합니다. 사용자가 정답을 확인한 데이터를 쌓아 주기적으로 검수·재학습하고 모델을 자동으로 배포하는 구조, 그리고 카메라 중심의 모바일 앱(안드로이드·iOS) 배포도 검토합니다.</p></div>
     </div>
     <p class="note">※ 2~4단계는 아직 진행하지 않은 계획입니다. 우리 모델의 정확도는 합성 테스트 이미지 기준으로만 측정했고(데이터·모델 페이지), 실제 장비 이미지에서의 성능은 아직 모릅니다.</p>
@@ -1198,14 +1207,14 @@
         <li>자동 분석의 신뢰도는 모델이 학습한 범위 안에서만 믿을 수 있습니다. 더 어려운 별도 합성 샘플 1,000장에서는 자동 분석 정확도가 합성 테스트(98.8%)보다 낮은 약 90%였습니다. (데이터·모델 > 신뢰도 향상)</li>
         <li>이 페이지의 웨이퍼 이미지는 우리가 설계한 생성기로 만든 합성 이미지입니다.</li></ul></div>
       <div class="card hyp"><h3>가설</h3><ul>
-        <li>수작업 확인에 시간이 많이 든다.</li>
-        <li>판단 기준이 담당자마다 다를 수 있다.</li>
+        <li>수작업 확인에 시간이 많이 든다. (문헌 근거: 문제 정의 페이지, 시간 수치는 확인하지 못함)</li>
+        <li>판단 기준이 담당자마다 다를 수 있다. (문헌 근거: 문제 정의 페이지)</li>
         <li>자동 분석 필터가 사람이 정밀하게 측정할 이미지 수를 줄여 준다.</li>
         <li>아이코어의 고객 지원이나 부가 소프트웨어로 쓸 수 있다.</li></ul></div>
       <div class="card todo"><h3>확인 필요</h3><ul>
         <li>실제로 사용할 샘플 이미지와 데이터셋 (공개 WM-811K는 웨이퍼 맵 형식이라 표면 이미지와 다름)</li>
         <li>실제 장비 이미지에서의 정확도 (지금은 합성 이미지 기준 95.1%만 측정함)</li>
-        <li>현장 담당자 인터뷰와 자동 분석을 허용할 기준값(신뢰도 %, 목표 정확도)</li>
+        <li>현장 검증(이번 프로젝트는 하루 만에 진행해 현장 조사 없이 논문·문헌 근거로 정리했음)과 자동 분석을 허용할 기준값(신뢰도 %, 목표 정확도)</li>
         <li>참고 이미지: 웨이퍼 전체 검사 예시의 원 출처(ChatGPT를 통해 얻음), 그리고 두 이미지의 사용 허가</li></ul></div>
     </div>
   </div>
@@ -1899,19 +1908,6 @@ function showAnalysis(a){
   body.innerHTML=html;
   return false;
 }
-
-// ---------- 현장 인터뷰 ----------
-// 인터뷰를 하면 아래 배열에 {who:'반도체 장비 엔지니어 (익명)',quote:'...',date:'2026-12-01'} 형태로 추가하세요.
-const INTERVIEWS=[];
-(function(){
-  const box=document.getElementById('interviewBody');
-  if(INTERVIEWS.length){
-    box.innerHTML=INTERVIEWS.map(q=>'<blockquote>“'+q.quote+'”<span>'+q.who+' · '+q.date+'</span></blockquote>').join('')+'<p class="note">※ 소수 의견이며, 전체 현장을 대표하지는 않습니다.</p>';
-  }else{
-    document.getElementById('interviewBox').classList.add('planned');document.querySelector('#interviewBox h3').textContent='검증 계획 (현장 인터뷰 예정)';
-    box.innerHTML='<p style="color:var(--muted);font-size:14.5px">이 문제 가설은 현장 인터뷰로 검증할 계획입니다. 반도체 관련 교수·선배·실습 담당자·현업자 1~3명께 아래 질문을 드릴 예정입니다.</p><ul><li>이미지 한 장을 눈으로 분류하는 데 보통 얼마나 걸리나요?</li><li>스크래치와 오염을 구분하기 어려운 경우가 얼마나 자주 있나요?</li><li>분류 신뢰도가 몇 % 이상이면 사람이 보지 않고 자동으로 넘겨도 된다고 보시나요? (자동으로 넘긴 것 중 몇 %의 오류까지 허용되나요?)</li></ul>';
-  }
-})();
 
 // ---------- 기대 효과 계산기 (가정값) ----------
 (function(){
