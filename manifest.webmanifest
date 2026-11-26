@@ -1,0 +1,26 @@
+{
+  "name": "ScanWafer · 웨이퍼 표면 불량 분류",
+  "short_name": "ScanWafer",
+  "description": "웨이퍼·칩 표면 불량을 카메라로 찍어 분류하고 불량 위치를 보여 주는 앱",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "ko",
+  "background_color": "#0d2238",
+  "theme_color": "#14558f",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
