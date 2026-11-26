@@ -427,7 +427,7 @@
       <span class="tag">WAFER · CHIP SURFACE INSPECTION</span>
       <h1>대량 이미지 자동 선별로<br><em>검사 시간 단축</em></h1>
       <p>검사장비 엔지니어와 품질 담당자를 위한 불량 이미지 분류기입니다. 이미지 수백, 수천 장을 한꺼번에 넣으면, <b>기계가 분석할 수 있는 이미지는 바로 분석해서 제외</b>하고 <b>분석이 어려운 이미지만 남겨</b> 사람이 정밀하게 측정할 수 있게 하는 <b>불량 이미지 필터</b>입니다.</p>
-      <a class="btn" href="#/demo/filter" data-route="demo">여러 장 필터 체험</a>
+      <a class="btn" href="#/demo" data-route="demo">분류 체험하기</a>
       <a class="btn ghost" href="#/about/problem" data-route="about">왜 필요한가요?</a>
       <div class="badge-row">
         <span class="badge">3클래스 분류</span>
@@ -476,7 +476,7 @@
     <p class="note" id="fnNote"></p>
     <div class="cta" style="margin-top:22px">
       <div><h3>직접 넣어 보세요</h3><p>이미지를 여러 장 올리거나 합성 샘플을 만들면, 자동 분석되는 것과 사람에게 남는 것이 바로 나뉩니다. 정답이 있으면 학습으로 신뢰도가 얼마나 올랐는지도 측정합니다.</p></div>
-      <a class="btn" href="#/demo/filter" data-route="demo">여러 장 필터 체험</a>
+      <a class="btn" href="#/demo" data-route="demo">분류 체험하기</a>
     </div>
   </div>
 </section>
@@ -494,7 +494,7 @@
     </div>
     <div class="cta">
       <div><h3>지금 직접 체험해 보세요</h3><p>이미지를 여러 장 올리면 자동으로 분석되는 것과 사람이 정밀하게 볼 것으로 나뉘는 과정을 직접 확인해 보세요.</p></div>
-      <a class="btn" href="#/demo/filter" data-route="demo">여러 장 필터 체험</a>
+      <a class="btn" href="#/demo" data-route="demo">분류 체험하기</a>
     </div>
   </div>
 </section>
@@ -520,7 +520,7 @@
   <div class="wrap">
     <span class="tag">DEMO</span>
     <h2>분류 데모</h2>
-    <p class="lead">두 가지로 체험할 수 있습니다. 많은 이미지를 한꺼번에 넣어 필터 결과를 보려면 위의 <a href="#/demo/filter" style="color:var(--blue-d);font-weight:700">여러 장 필터</a> 탭으로 가세요. ① 합성 테스트 이미지 12장 중 하나를 선택하면 <b>우리가 학습한 모델이 실제로 계산한 결과</b>가 나오고(불량 위치 표시와 확대 이미지도 함께 보여 줍니다), ② 내 이미지를 <b>카메라로 찍거나 앨범·파일에서 골라</b> 올리면 같은 모델이 분석하고, 불량 위치와 분석 과정을 단계별로 보여 줍니다. 정답을 알려 주면 내 데이터로 쌓입니다. 단, 합성 이미지로만 학습했기 때문에 실제 사진에서는 <b>판정 보류</b>가 나올 수 있습니다.</p>
+    <p class="lead">두 가지로 체험할 수 있습니다. 이미지는 <b>한 장도, 수백~수천 장도</b> 올릴 수 있습니다. 여러 장을 한꺼번에 올리면 이 페이지 아래의 <a href="#/demo/filter" style="color:var(--blue-d);font-weight:700">대량 분류</a> 구역에서 자동 분석으로 제외할 것과 사람이 정밀하게 볼 것을 나눠 줍니다. ① 합성 테스트 이미지 12장 중 하나를 선택하면 <b>우리가 학습한 모델이 실제로 계산한 결과</b>가 나오고(불량 위치 표시와 확대 이미지도 함께 보여 줍니다), ② 내 이미지를 <b>카메라로 찍거나 앨범·파일에서 골라</b> 올리면 같은 모델이 분석하고, 불량 위치와 분석 과정을 단계별로 보여 줍니다. 정답을 알려 주면 내 데이터로 쌓입니다. 단, 합성 이미지로만 학습했기 때문에 실제 사진에서는 <b>판정 보류</b>가 나올 수 있습니다.</p>
     <div class="guide" id="guide" aria-label="클래스 구분 방법"></div>
     <div class="demo">
       <div>
@@ -529,14 +529,14 @@
           <label class="tools"><input type="checkbox" id="boxToggle" checked> 불량 위치 표시 (정답 위치 · 생성기 기준)</label></div>
         <div class="thumbs" id="thumbs" style="margin-top:16px"></div>
         <div class="upload" id="dropZone">
-          <input type="file" id="fileAlbum" accept="image/*" hidden>
-          <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.webp,.bmp,.gif,.tif,.tiff" hidden>
+          <input type="file" id="fileAlbum" accept="image/*" multiple hidden>
+          <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.webp,.bmp,.gif,.tif,.tiff" multiple hidden>
           <input type="file" id="fileCam" accept="image/*" capture="environment" hidden>
           <button class="btn" id="uploadBtn" type="button" aria-haspopup="true" aria-expanded="false">내 이미지 분석하기</button>
           <div class="srcmenu" id="srcMenu" hidden>
             <button type="button" id="srcCam"><b>카메라</b><span>지금 찍어서 바로 분석</span></button>
-            <button type="button" id="srcAlbum"><b>앨범</b><span>저장된 사진에서 선택</span></button>
-            <button type="button" id="srcFile"><b>파일</b><span>이미지 파일 선택</span></button>
+            <button type="button" id="srcAlbum"><b>앨범</b><span>저장된 사진에서 선택 (여러 장이면 아래 필터로 한꺼번에 분석)</span></button>
+            <button type="button" id="srcFile"><b>파일</b><span>이미지 파일 선택 (여러 장이면 아래 필터로 한꺼번에 분석)</span></button>
           </div>
           <small>이미지를 여기로 끌어놓아도 됩니다. 사진과 카메라 영상은 서버로 전송되지 않고 이 브라우저 안에서만 분석됩니다. 지원 범위는 웨이퍼 표면의 스크래치·오염입니다. 칩 모서리 깨짐(Chipping)이나 복잡한 회로 패턴은 "판정 보류"로 표시될 수 있습니다.</small>
         </div>
@@ -552,10 +552,10 @@
   </div>
 </section>
 
-<section id="filter" class="alt">
+<section id="filter">
   <div class="wrap">
-    <span class="tag">FILTER</span>
-    <h2>여러 장 필터</h2>
+    <span class="tag">CLASSIFY · MANY IMAGES</span>
+    <h2>대량 분류: 자동 분석과 사람 정밀 검사로 나누기</h2>
     <p class="lead">웨이퍼 이미지를 수십~수천 장 한꺼번에 넣어 보세요. <b>분석할 수 있는 이미지는 바로 분석해서 제외</b>하고, <b>분석이 어려운 이미지만 남겨</b> 사람이 정밀하게 측정할 수 있게 합니다. 정답(labels.csv)을 함께 넣으면 필터가 얼마나 믿을 만한지, 그리고 학습으로 신뢰도가 얼마나 올라가는지도 측정합니다. 이미지는 서버로 보내지 않고 이 브라우저 안에서만 처리합니다.</p>
     <div class="card flt-in" id="fltDrop">
       <input type="file" id="fltFiles" accept="image/*" multiple hidden>
@@ -657,7 +657,7 @@
   <div class="wrap">
     <span class="tag">AUTO-ANALYSIS THRESHOLD</span>
     <h2>자동 분석 기준</h2>
-    <p class="lead">신뢰도가 이 기준 이상이면 기계가 바로 분석을 끝내고 목록에서 <b>제외</b>합니다. 기준에 못 미치거나 학습 범위 밖인 이미지만 남겨 <b>사람이 정밀하게 측정</b>합니다. 슬라이더로 기준을 바꿔 보세요. 표, 요약, 아래 기대 효과 계산, 여러 장 필터 결과가 바로 바뀝니다.</p>
+    <p class="lead">신뢰도가 이 기준 이상이면 기계가 바로 분석을 끝내고 목록에서 <b>제외</b>합니다. 기준에 못 미치거나 학습 범위 밖인 이미지만 남겨 <b>사람이 정밀하게 측정</b>합니다. 슬라이더로 기준을 바꿔 보세요. 표, 요약, 아래 기대 효과 계산, 분류 체험의 대량 분류 결과가 바로 바뀝니다.</p>
     <div class="slider-box">
       <div class="row"><label for="th"><b>자동 분석 기준 신뢰도</b> <span style="color:var(--muted);font-size:14px">이 값 이상이면 자동 분석 완료(제외), 미만이면 사람 정밀 검사</span></label><output id="thOut" for="th">93%</output></div>
       <input type="range" id="th" min="50" max="99" step="1" value="93" aria-label="자동 분석 기준 신뢰도">
@@ -751,7 +751,7 @@
         <p style="font-size:14.5px;color:var(--muted)">새 데이터로 추가 학습하면 기존 성능을 잊을 수 있습니다(catastrophic forgetting). Rolnick 등(2019)의 경험 재생(옛 데이터를 섞어 복습)과 Li 등(2018)의 L2-SP(원래 가중치에서 멀어지지 않게 규제)를 함께 썼습니다. 학습용 이미지 150장을 복습용으로 항상 섞고, 새 데이터에는 개수에 따른 가중치를 줍니다. 아래 "학습 향상도" 결과가 이 방법으로 얻은 것입니다.</p></div>
       <div class="card hyp method"><span class="tagv no">적용해 보았으나 이점 없음</span>
         <h3>4. 헷갈리는 것부터 학습 (Active learning · Uncertainty sampling)</h3>
-        <p style="font-size:14.5px;color:var(--muted)">사람이 정답을 달 이미지를 모델이 가장 헷갈리는 것부터 고르면 같은 노력으로 더 빨리 배운다는 방법입니다(Settles, 2009 정리). 우리 실험에서는 <b>무작위로 고른 것보다 일관되게 좋지 않았습니다.</b> 그래서 "더 낫다"고 주장하지 않고, 여러 장 필터 화면에서 두 방식을 나란히 보여 줍니다.</p></div>
+        <p style="font-size:14.5px;color:var(--muted)">사람이 정답을 달 이미지를 모델이 가장 헷갈리는 것부터 고르면 같은 노력으로 더 빨리 배운다는 방법입니다(Settles, 2009 정리). 우리 실험에서는 <b>무작위로 고른 것보다 일관되게 좋지 않았습니다.</b> 그래서 "더 낫다"고 주장하지 않고, 분류 체험 화면에서 두 방식을 나란히 보여 줍니다.</p></div>
     </div>
 
     <h3 class="flt-sub">자동 분석 기준을 정하는 법 (Selective classification)</h3>
@@ -781,7 +781,7 @@
     </div>
 
     <h3 class="flt-sub">더 어려운 이미지에서는? 학습 향상도 (별도로 만든 합성 샘플 1,000장)</h3>
-    <p class="lead" style="font-size:15px">팀이 따로 만든 <b>더 어려운 합성 샘플 1,000장</b>(쉬움 651 · 어려움 250 · 매우 어려움 99, 모델 학습에 쓰지 않음)으로 시험했습니다. 정답이 있는 이 이미지를 <b>학습용 700장 / 평가용 300장</b>으로 나누고, 학습용을 늘려 가며 모델을 보정한 뒤 <b>평가용 300장</b>으로 측정했습니다. 기준은 93%입니다. 같은 시험을 여러 장 필터 화면에서 직접 돌려 볼 수 있습니다.</p>
+    <p class="lead" style="font-size:15px">팀이 따로 만든 <b>더 어려운 합성 샘플 1,000장</b>(쉬움 651 · 어려움 250 · 매우 어려움 99, 모델 학습에 쓰지 않음)으로 시험했습니다. 정답이 있는 이 이미지를 <b>학습용 700장 / 평가용 300장</b>으로 나누고, 학습용을 늘려 가며 모델을 보정한 뒤 <b>평가용 300장</b>으로 측정했습니다. 기준은 93%입니다. 같은 시험을 분류 체험 화면(대량 분류)에서 직접 돌려 볼 수 있습니다.</p>
     <div class="two">
       <div>
         <table class="tbl-sm" id="r1000Base"></table>
@@ -791,7 +791,7 @@
         <div class="legend"><span><i style="background:#1e78c8"></i>자동 분석된 것의 정확도</span><span><i style="background:#2fae7b"></i>전체 정확도</span><span><i style="background:#e0584d"></i>자동 분석 비율</span></div></div></div>
     </div>
     <div style="overflow-x:auto;margin-top:14px"><table class="tbl-sm" id="lrTable"></table></div>
-    <p class="note"><a href="#/demo/filter" style="color:var(--blue-d);font-weight:700">여러 장 필터</a>에서 합성 샘플을 만들어 같은 측정을 직접 해 볼 수 있습니다.</p>
+    <p class="note"><a href="#/demo/filter" style="color:var(--blue-d);font-weight:700">분류 체험의 대량 분류</a>에서 합성 샘플을 만들어 같은 측정을 직접 해 볼 수 있습니다.</p>
 
     <div class="two" style="margin-top:24px">
       <div class="card fact"><span class="label fact">이 결과로 말할 수 있는 것</span>
@@ -871,7 +871,7 @@
       <tr><td>크기에 영향을 받지 않는 설계</td><td>맵 크기가 제각각(최대 300×202)이라 모두 32×32로 맞추고 비율로 표현</td><td><span class="tagv use">크기만 적용</span></td></tr>
       <tr><td>Radon 변환 40개, Hough 직선 개수, 노이즈 제거</td><td>쓰지 않음. 대신 8방향 비중과 고리 밀도를 썼음 (이 특징은 회전에 민감함)</td><td><span class="tagv no">미적용</span></td></tr>
       <tr><td>2단계 SVM (패턴 유무 → 8유형), 희소 유형에 큰 비용</td><td>작은 신경망(36-48-9) 하나로 9종을 한 번에. 희소 유형은 <b>클래스당 700장 상한</b>으로 균형을 맞춤</td><td><span class="tagv no">방식이 다름</span></td></tr>
-      <tr><td>경계의 샘플을 전문가가 재검토하고 재학습</td><td>신뢰도가 낮은 이미지를 사람이 정밀하게 측정하고, 그 정답으로 모델을 다시 학습 (<a href="#/demo/filter" style="color:var(--blue-d)">여러 장 필터</a>)</td><td><span class="tagv use">같은 발상</span></td></tr>
+      <tr><td>경계의 샘플을 전문가가 재검토하고 재학습</td><td>신뢰도가 낮은 이미지를 사람이 정밀하게 측정하고, 그 정답으로 모델을 다시 학습 (<a href="#/demo/filter" style="color:var(--blue-d)">분류 체험</a>)</td><td><span class="tagv use">같은 발상</span></td></tr>
       <tr><td>신뢰도가 기준보다 낮으면 따로 처리</td><td>신뢰도가 자동 분석 기준(93%) 이상이면 자동 분석, 미만이면 사람 정밀 검사 (<a href="#/results/priority" style="color:var(--blue-d)">자동 분석 기준</a>)</td><td><span class="tagv use">같은 발상</span></td></tr>
     </table></div>
     <p class="note">※ 위 표의 "우리 웨이퍼 맵 모델"은 이 사이트에 들어 있는 모델의 실제 코드(특징 36개 = 구역 밀도 13 + 고리 밀도 5 + 방향 비중 8 + 큰 덩어리·전체 속성 10)를 기준으로 정리했습니다. 마지막 두 줄(사람 재검토, 신뢰도 기준)은 사진 분석·필터 쪽에 구현한 것이고, 논문과 "발상이 같다"는 뜻이지 논문의 방법을 그대로 구현했다는 뜻은 아닙니다.</p>
@@ -981,7 +981,7 @@
     <h2>데이터셋: 합성 이미지와 실제 WM-811K</h2>
     <p class="lead">이 사이트는 두 가지 데이터를 씁니다. 먼저 사진(표면 이미지) 모델의 데이터입니다. 표면 검사 이미지를 공개 데이터에서 구하지 못해서, 팀이 직접 <b>이미지 생성기</b>를 설계했습니다. 웨이퍼를 그리는 코드에 위치, 조명, 잡음, 불량의 크기와 농도를 무작위로 바꾸는 변수를 넣어서, 같은 클래스라도 이미지가 매번 다르게 나옵니다.</p>
 <div style="overflow-x:auto;margin:0 0 26px"><table class="tbl-sm"><tr><th>이 사이트의 모델</th><th>사용한 데이터</th><th>클래스</th><th>성능 (테스트)</th><th>데이터의 성격</th></tr>
-      <tr><td><b>사진(표면 이미지) 분류</b><br><small>분류 체험 · 여러 장 필터</small></td><td>팀이 만든 <b>합성 이미지 1,500장</b> (이미지 생성기)</td><td>3종: 정상·스크래치·오염</td><td>95.1% (합성 테스트 225장)</td><td>실제 장비 이미지가 아님</td></tr>
+      <tr><td><b>사진(표면 이미지) 분류</b><br><small>분류 체험</small></td><td>팀이 만든 <b>합성 이미지 1,500장</b> (이미지 생성기)</td><td>3종: 정상·스크래치·오염</td><td>95.1% (합성 테스트 225장)</td><td>실제 장비 이미지가 아님</td></tr>
       <tr><td><b>웨이퍼 맵 분류</b><br><small>분류 체험 &gt; 웨이퍼 맵 분석</small></td><td><b>WM-811K 실제 공장 데이터</b>에서 추출한 맵 5,604장</td><td>9종: Center, Donut, Edge-Loc, Edge-Ring, Loc, Random, Scratch, Near-full, none</td><td>84.2% (WM-811K 테스트 840장)</td><td>실제 공장 데이터지만 사진이 아니라 칸별 불량 지도(맵)임</td></tr></table></div>
     <div class="two">
       <div class="card fact"><span class="label fact">데이터 구성</span>
@@ -1794,11 +1794,11 @@ const dz=document.getElementById('dropZone');
   $('srcFile').onclick=()=>{closeMenu();$('fileInput').click()};
   $('srcCam').onclick=()=>{closeMenu();openCamera()};
   const SRC={fileAlbum:'앨범',fileInput:'파일',fileCam:'카메라 앱'};
-  ['fileAlbum','fileInput','fileCam'].forEach(id=>{const el=$(id);el.onchange=()=>{if(el.files[0])handleFile(el.files[0],SRC[id]);el.value=''}});
+  ['fileAlbum','fileInput','fileCam'].forEach(id=>{const el=$(id);el.onchange=()=>{const fl=Array.from(el.files);el.value='';if(fl.length>1&&window.fltHandleFiles){window.fltHandleFiles(fl);const f=document.getElementById('filter');if(f)f.scrollIntoView({behavior:'smooth'})}else if(fl[0])handleFile(fl[0],SRC[id])}});
 })();
 ['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag')}));
 ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag')}));
-dz.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)handleFile(f,'끌어놓기')});
+dz.addEventListener('drop',e=>{const fl=Array.from(e.dataTransfer.files);if(fl.length>1&&window.fltHandleFiles){window.fltHandleFiles(fl);const f=document.getElementById('filter');if(f)f.scrollIntoView({behavior:'smooth'})}else if(fl[0])handleFile(fl[0],'끌어놓기')});
 function handleFile(file,srcTag){
   const body=document.getElementById('resultBody');
   if(!file.type.startsWith('image/')){body.innerHTML='<div class="flag warn">이미지 파일(JPG, PNG 등)만 분석할 수 있습니다.</div>';return}
@@ -2277,6 +2277,7 @@ fillFilterStats();
   ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag')}));
   dz.addEventListener('drop',e=>{if(e.dataTransfer&&e.dataTransfer.files.length)handleFiles(e.dataTransfer.files)});
   function setTh(v){TH=v;$('fltTh').value=Math.round(v*100);$('fltThOut').textContent=Math.round(v*100)+'%';const t=document.getElementById('th');if(t)t.value=Math.round(v*100)}
+  window.fltHandleFiles=handleFiles;
   window.fltSetTh=function(v){$('fltTh').value=Math.round(v*100);$('fltThOut').textContent=Math.round(v*100)+'%';if(ITEMS.length)render()};
   $('fltTh').addEventListener('input',e=>{setTh(+e.target.value/100);if(window.renderBatch)renderBatch();if(typeof curIdx!=='undefined'&&curIdx>=0)select(curIdx);render()});
   function stats(items){
@@ -2450,7 +2451,7 @@ fillFilterStats();
 (function(){
   const PAGES={
     home:{title:'홈',subs:[]},
-    demo:{title:'분류 체험',subs:[['demo','분류 체험 (1장)'],['filter','여러 장 필터'],['wafermap','웨이퍼 맵 분석'],['mydata','내 데이터·학습']]},
+    demo:{title:'분류 체험',subs:[['demo','분류 체험'],['wafermap','웨이퍼 맵 분석'],['mydata','내 데이터·학습']]},
     types:{title:'불량 유형',subs:[['types','불량 유형']]},
     results:{title:'결과 분석',subs:[['batch','배치 결과 + CSV'],['priority','자동 분석 기준']]},
     data:{title:'데이터·모델',subs:[['dataset','데이터셋 설계'],['model','모델·성능'],['trust','신뢰도 향상 (논문 적용)'],['wmpaper','WM-811K 논문 적용'],['process','불량 잡는 과정'],['growth','데이터가 쌓이면'],['gap','실제 이미지 시험']]},
@@ -2478,7 +2479,7 @@ fillFilterStats();
     const {page,sub}=parse();
     document.querySelectorAll('[data-route]').forEach(a=>{if(a.closest('nav ul')){if(a.dataset.route===page)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')}});
     homeView.classList.toggle('on',page==='home');
-    allSecs.forEach(id=>{const s=document.getElementById(id);if(s){const on=(id===sub);s.style.display=on?'block':'none';s.classList.remove('on');if(on){void s.offsetWidth;s.classList.add('view','on')}}});
+    allSecs.forEach(id=>{const s=document.getElementById(id);if(s){const on=(id===sub)||(page==='demo'&&sub==='demo'&&id==='filter');s.style.display=on?'block':'none';s.classList.remove('on');if(on){void s.offsetWidth;s.classList.add('view','on')}}});
     const subs=PAGES[page].subs;
     if(subs.length>1){
       tabsWrap.style.display='block';
@@ -2490,7 +2491,7 @@ fillFilterStats();
     if(sub==='dataset'&&window.buildGallery)window.buildGallery();
     if(sub==='mydata'&&window.refreshMyData)window.refreshMyData();
     if(sub==='wafermap'&&window.wmInit)window.wmInit();
-    if(!focusTabs)window.scrollTo(0,0);
+    if(page==='demo'&&/\/filter$/.test(location.hash)){const f=document.getElementById('filter');if(f)f.scrollIntoView()}else if(!focusTabs)window.scrollTo(0,0);
   }
   window.addEventListener('hashchange',render);
   render();
