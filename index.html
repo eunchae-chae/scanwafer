@@ -7,7 +7,7 @@
 <meta name="description" content="ScanWafer: 웨이퍼·칩 표면 검사 이미지를 여러 장 넣으면 분석할 수 있는 이미지는 자동으로 분석해 제외하고, 분석이 어려운 이미지만 남겨 사람이 정밀하게 측정하게 해 주는 필터 (2026 NI2.0 AID 해커톤 Team 4)">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2714%27 fill=%27%231e78c8%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%276%27 fill=%27%23dcecf9%27/%3E%3C/svg%3E">
 <meta property="og:title" content="ScanWafer | 웨이퍼·칩 표면 불량 이미지 분류기">
-<meta property="og:description" content="이미지 1,000장 중 분석 가능한 것은 자동 분석하고, 어려운 것만 남겨 사람이 정밀하게 측정하게 하는 웨이퍼 불량 이미지 필터 (2026 NI2.0 AID 해커톤 Team 4)">
+<meta property="og:description" content="대량 이미지 자동 선별로 검사 시간을 줄입니다. 분석 가능한 것은 자동 분석하고, 어려운 것만 남겨 사람이 정밀하게 측정하게 하는 웨이퍼 불량 이미지 필터 (2026 NI2.0 AID 해커톤 Team 4)">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#14558f">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -425,7 +425,7 @@
   <div class="wrap grid">
     <div>
       <span class="tag">WAFER · CHIP SURFACE INSPECTION</span>
-      <h1>이미지 1,000장을 넣으면,<br><em>사람이 정밀하게 볼 것만</em> 남깁니다</h1>
+      <h1>대량 이미지 자동 선별로<br><em>검사 시간 단축</em></h1>
       <p>검사장비 엔지니어와 품질 담당자를 위한 불량 이미지 분류기입니다. 웨이퍼·칩 표면 이미지를 수백~수천 장 한꺼번에 넣으면, <b>기계가 분석할 수 있는 이미지는 바로 분석해서 제외</b>하고 <b>분석이 어려운 이미지만 남겨</b> 사람이 정밀하게 측정할 수 있게 하는 <b>불량 이미지 필터</b>입니다.</p>
       <a class="btn" href="#/demo/filter" data-route="demo">여러 장 필터 체험</a>
       <a class="btn ghost" href="#/about/problem" data-route="about">왜 필요한가요?</a>
@@ -460,10 +460,10 @@
 <section id="homeFunnel" class="alt">
   <div class="wrap">
     <span class="tag">HOW IT FILTERS</span>
-    <h2>이미지 1,000장이 들어오면 이렇게 걸러 냅니다</h2>
+    <h2>대량 이미지가 들어오면 이렇게 걸러 냅니다</h2>
     <p class="lead">ScanWafer의 목적은 이미지를 하나하나 사람에게 보여 주는 것이 아니라, <b>기계가 분석할 수 있는 이미지는 바로 분석해 제외</b>하고 <b>분석할 수 없는 이미지만 남겨서</b> 사람이 정밀하게 측정하게 하는 것입니다.</p>
     <div class="funnel" aria-label="필터 흐름">
-      <div class="fn-box"><b>1,000장</b><span>웨이퍼·칩 표면 이미지 입력</span></div>
+      <div class="fn-box"><b>대량 이미지</b><span>웨이퍼·칩 표면 이미지 수백~수천 장 입력</span></div>
       <div class="fn-arr">→</div>
       <div class="fn-box"><b>기계 분석</b><span>분류 + 신뢰도 + 판정 보류</span></div>
       <div class="fn-arr">→</div>
@@ -2109,8 +2109,8 @@ function drawLine(canvas,o){
 function fillFilterStats(){
   const ts=testStats(TH),f=v=>(v*100).toFixed(1)+'%';
   const set=(id,t)=>{const e=document.getElementById(id);if(e)e.textContent=t};
-  set('fnAuto',Math.round(ts.auto/ts.n*1000)+'장 ('+f(ts.auto/ts.n)+')');
-  set('fnHuman',Math.round(ts.flagged/ts.n*1000)+'장 ('+f(ts.flagged/ts.n)+')');
+  set('fnAuto',f(ts.auto/ts.n));
+  set('fnHuman',f(ts.flagged/ts.n));
   const a=document.getElementById('fnBarA'),h=document.getElementById('fnBarH');if(a)a.style.width=(ts.auto/ts.n*100)+'%';if(h)h.style.width=(ts.flagged/ts.n*100)+'%';
   set('fnNote','※ 위 비율은 합성 테스트 이미지 '+ts.n+'장에서 모델이 실제로 계산한 값입니다(자동 분석 기준 '+Math.round(TH*100)+'%). 자동 분석된 '+ts.auto+'장의 정확도는 '+f(ts.autoAcc)+'이고, 모델이 틀린 '+ts.errs+'장 중 '+ts.caught+'장이 사람 쪽에 남았습니다. 더 어려운 이미지가 섞이면 자동 분석 비율과 정확도가 낮아집니다 (데이터·모델 > 신뢰도 향상).');
   set('kpiAuto',f(ts.auto/ts.n));set('kpiAutoL','자동 분석 비율 (기준 '+Math.round(TH*100)+'%)');
