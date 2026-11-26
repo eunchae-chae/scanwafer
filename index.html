@@ -389,7 +389,7 @@
       <div class="card type-card"><canvas id="typeScratch" width="400" height="400" role="img" aria-label="가늘고 긴 선형 흠집이 있는 스크래치 예시"></canvas><span class="pill scratch">스크래치 (Scratch)</span><p>가늘고 긴 선형 흠집입니다. 이송이나 접촉 과정에서 생길 수 있습니다.</p></div>
       <div class="card type-card"><canvas id="typeContam" width="400" height="400" role="img" aria-label="점과 얼룩 형태의 입자가 붙은 오염 예시"></canvas><span class="pill contam">오염 (Contamination)</span><p>입자나 얼룩이 점 또는 덩어리 형태로 표면에 붙어 있는 상태입니다.</p></div>
     </div>
-    <p class="note">※ 위 3장의 웨이퍼 이미지는 우리가 설계한 생성기로 만든 합성 이미지입니다. 실제 샘플로 교체 예정입니다.</p>
+    <p class="note">※ 위 3장의 웨이퍼 이미지는 우리가 설계한 생성기로 만든 합성 이미지입니다.</p>
     <div class="examples" id="examples">
       <h3>실제 검사 화면은 이렇게 보입니다</h3>
       <p class="lead" style="margin-bottom:0">표면 검사 장비는 불량 위치를 박스로 표시하고 유형을 알려 줍니다. ScanWafer의 <b>결함 위치 표시</b>와 <b>유형 분류</b>가 맡으려는 역할이 바로 이 부분입니다.</p>
@@ -750,17 +750,18 @@ function drawWafer(canvas,type,seed){
   return boxes;
 }
 
-genWafer(document.getElementById('typeOk'),'ok',487);
-genWafer(document.getElementById('typeScratch'),'scratch',100439);
-genWafer(document.getElementById('typeContam'),'contam',200450);
+genWafer(document.getElementById('typeOk'),'ok',487,true);
+genWafer(document.getElementById('typeScratch'),'scratch',100439,true);
+genWafer(document.getElementById('typeContam'),'contam',200450,true);
 
 // ---------- 합성 이미지 생성기 + 특징 추출 + 학습된 모델 ----------
 
-function genWafer(canvas,type,seed){
+function genWafer(canvas,type,seed,centered){
   const r=rng((seed*7+13)>>>0),ctx=canvas.getContext('2d',{willReadFrequently:true}),W=canvas.width,H=canvas.height;
   const U=(a,b)=>a+(b-a)*r(),boxes=[];
   const bgc=Math.round(U(8,30));ctx.fillStyle='rgb('+bgc+','+(bgc+14)+','+(bgc+30)+')';ctx.fillRect(0,0,W,H);
-  const cx=W/2+U(-.03,.03)*W,cy=H/2+U(-.03,.03)*H,R=W*U(.40,.47);
+  let cx=W/2+U(-.03,.03)*W,cy=H/2+U(-.03,.03)*H,R=W*U(.40,.47);
+  if(centered){cx=W/2;cy=H/2;R=W*.48}
   ctx.save();ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.clip();
   const tone=U(.85,1.12),lx=cx+U(-.5,.5)*R,ly=cy+U(-.5,.5)*R;
   const g=ctx.createRadialGradient(lx,ly,R*.1,cx,cy,R*1.05);
