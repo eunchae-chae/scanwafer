@@ -246,6 +246,22 @@
   .src-box ol{margin:8px 0 8px 20px}
   .src-box li{margin-bottom:4px}
   .src-box p{font-size:13px;margin:6px 0 0}
+  .viewer canvas{max-width:520px!important}
+  .guide{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+  @media(max-width:900px){.guide{grid-template-columns:1fr}}
+  .guide figure{display:flex;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+  .guide canvas{width:104px;height:104px;border-radius:10px;flex:none;background:#0d2238}
+  .guide figcaption{font-size:13.5px;color:var(--muted);line-height:1.5}
+  .guide figcaption b{display:block;font-size:15px;margin-bottom:2px}
+  .guide .g-ok b{color:var(--ok)}.guide .g-scratch b{color:var(--scratch)}.guide .g-contam b{color:var(--contam)}
+  .zoomhead{margin-top:18px;font-size:14px;font-weight:800;color:var(--ink)}
+  .zoomhead small{font-weight:400;color:var(--muted);font-size:12.5px}
+  .zoomrow{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+  .zoomrow figure{margin:0}
+  .zoomrow canvas{width:200px;height:200px;border-radius:12px;background:#0d2238;display:block;border:2px solid var(--line)}
+  .zoomnote{font-size:13.5px;color:var(--muted);margin-top:10px;line-height:1.6}
+  .thumb .tl{display:block;font-weight:700}
+  .thumb .tl.scratch{color:var(--scratch)}.thumb .tl.contam{color:var(--contam)}.thumb .tl.ok{color:var(--ok)}
 </style>
 </head>
 <body>
@@ -341,11 +357,12 @@
   <div class="wrap">
     <span class="tag">DEMO</span>
     <h2>분류 데모</h2>
-    <p class="lead">두 가지로 체험할 수 있습니다. ① 합성 테스트 이미지 12장 중 하나를 선택하면 <b>우리가 학습한 모델이 실제로 계산한 결과</b>가 나오고("결함 위치 표시"로 불량 의심 영역도 볼 수 있습니다), ② 내 이미지를 올리면 같은 모델이 분석합니다. 단, 합성 이미지로만 학습했기 때문에 실제 사진에서는 <b>판정 보류</b>가 나올 수 있습니다.</p>
+    <p class="lead">두 가지로 체험할 수 있습니다. ① 합성 테스트 이미지 12장 중 하나를 선택하면 <b>우리가 학습한 모델이 실제로 계산한 결과</b>가 나오고(불량 위치 표시와 확대 이미지도 함께 보여 줍니다), ② 내 이미지를 올리면 같은 모델이 분석합니다. 단, 합성 이미지로만 학습했기 때문에 실제 사진에서는 <b>판정 보류</b>가 나올 수 있습니다.</p>
+    <div class="guide" id="guide" aria-label="클래스 구분 방법"></div>
     <div class="demo">
       <div>
         <div class="viewer"><canvas id="viewCanvas" width="600" height="600" role="img" aria-label="분류 대상 이미지"></canvas><small id="viewName">샘플을 선택하세요</small>
-          <label class="tools"><input type="checkbox" id="boxToggle"> 결함 위치 표시 (정답 위치 · 생성기 기준)</label></div>
+          <label class="tools"><input type="checkbox" id="boxToggle" checked> 불량 위치 표시 (정답 위치 · 생성기 기준)</label></div>
         <div class="thumbs" id="thumbs" style="margin-top:16px"></div>
         <div class="upload" id="dropZone">
           <input type="file" id="fileInput" accept="image/*" hidden>
@@ -356,6 +373,7 @@
       <div class="result" id="resultBox">
         <span class="mock real" id="modeBadge">학습한 모델의 실제 출력 · 합성 테스트 이미지</span>
         <div id="resultBody"></div>
+        <div id="zoomBody"></div>
       </div>
     </div>
   </div>
@@ -905,26 +923,57 @@ const thumbs=document.getElementById('thumbs');
 SAMPLES.forEach((s,i)=>{
   const d=document.createElement('div');d.className='thumb';d.dataset.i=i;
   const c=document.createElement('canvas');c.width=200;c.height=200;
-  d.appendChild(c);d.appendChild(document.createTextNode(s.id));
+  d.appendChild(c);d.appendChild(document.createTextNode(s.id));const tl=document.createElement('span');tl.className='tl '+s.type;tl.textContent=LABEL[s.type];d.appendChild(tl);
   paintSample(c,s);d.setAttribute('role','button');d.tabIndex=0;d.setAttribute('aria-label','샘플 '+s.id+' 선택');d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(i)}};
   d.onclick=()=>select(i);thumbs.appendChild(d);
 });
 var curIdx=-1;
-function drawBoxes(canvas,bxs){
+const BOX_LABEL={scratch:'스크래치 (정답)',contam:'오염 (정답)',ok:''};
+function drawBoxes(canvas,bxs,label){
+  label=label||'불량 의심 영역';
   const ctx=canvas.getContext('2d');ctx.save();ctx.font='bold 24px sans-serif';ctx.lineJoin='round';
   bxs.forEach(b=>{const x=Math.max(4,b.x),y=Math.max(32,b.y),w=Math.min(canvas.width-8-x,b.w),hh=Math.min(canvas.height-8-y,b.h);
     ctx.setLineDash([]);ctx.lineWidth=7;ctx.strokeStyle='rgba(255,255,255,.85)';ctx.strokeRect(x,y,w,hh);
     ctx.setLineDash([12,7]);ctx.lineWidth=3.5;ctx.strokeStyle='#e60000';ctx.strokeRect(x,y,w,hh);
-    const tw=ctx.measureText('불량 의심 영역').width,tx=Math.max(6,Math.min(x,canvas.width-tw-8));
-    ctx.setLineDash([]);ctx.lineWidth=6;ctx.strokeStyle='#ffffff';ctx.strokeText('불량 의심 영역',tx,y-9);ctx.fillStyle='#e60000';ctx.fillText('불량 의심 영역',tx,y-9)});
+    const tw=ctx.measureText(label).width,tx=Math.max(6,Math.min(x,canvas.width-tw-8));
+    ctx.setLineDash([]);ctx.lineWidth=6;ctx.strokeStyle='#ffffff';ctx.strokeText(label,tx,y-9);ctx.fillStyle='#e60000';ctx.fillText(label,tx,y-9)});
   ctx.restore();
+}
+// ---------- 확대 보기 / 구분 가이드 ----------
+function cropTo(dst,src,cx,cy,side,enhance){
+  const x=Math.max(0,Math.min(src.width-side,cx-side/2)),y=Math.max(0,Math.min(src.height-side,cy-side/2));
+  const g=dst.getContext('2d');g.fillStyle='#0d2238';g.fillRect(0,0,dst.width,dst.height);
+  g.filter=enhance?'contrast(1.8) brightness(1.08)':'none';
+  g.drawImage(src,x,y,side,side,0,0,dst.width,dst.height);g.filter='none';
+}
+function zoomTargets(s){
+  if(s.type==='ok')return [{cx:300,cy:300,side:220}];
+  return s.boxes.slice().sort((a,b)=>b.w*b.h-a.w*a.h).slice(0,2).map(b=>({cx:b.x+b.w/2,cy:b.y+b.h/2,side:Math.max(130,Math.min(320,Math.max(b.w,b.h)+50))}));
+}
+const ZOOM_NOTE={ok:'불량이 없는 샘플입니다. 선이나 점 없이 <b>격자 무늬만 규칙적으로</b> 보이면 정상입니다.',scratch:'<b>가늘고 긴 선</b>이 보이면 스크래치입니다. 색이 옅어서 원본에서는 잘 안 보일 수 있어 대비를 높여 보여 줍니다.',contam:'<b>작은 점이나 덩어리</b>가 모여 있으면 오염입니다. 선처럼 길게 이어지지 않고 한곳에 뭉쳐 있습니다.'};
+function renderZoom(s){
+  const box=document.getElementById('zoomBody');if(!box)return;
+  box.innerHTML='<div class="zoomhead">확대 보기 <small>(불량 위치를 크게, 대비를 높여서)</small></div><div class="zoomrow" id="zoomRow"></div><p class="zoomnote">'+ZOOM_NOTE[s.type]+'</p>';
+  const row=document.getElementById('zoomRow');
+  zoomTargets(s).forEach(t=>{const f=document.createElement('figure'),c=document.createElement('canvas');c.width=300;c.height=300;c.setAttribute('role','img');c.setAttribute('aria-label',LABEL[s.type]+' 확대 이미지');cropTo(c,s.canvas,t.cx,t.cy,t.side,s.type!=='ok');f.appendChild(c);row.appendChild(f)});
+}
+function buildGuide(){
+  const g=document.getElementById('guide');if(!g)return;
+  const items=[[SAMPLES[0],'ok','정상','선이나 점이 없고 격자 무늬만 규칙적으로 보입니다.'],[SAMPLES[1],'scratch','스크래치','가늘고 긴 선 모양입니다. 직선이거나 살짝 휘어져 있습니다.'],[SAMPLES[2],'contam','오염','작은 점들이 모여 있거나 덩어리 모양입니다.']];
+  items.forEach(([s,t,n,d])=>{
+    const f=document.createElement('figure');f.className='g-'+t;
+    const c=document.createElement('canvas');c.width=208;c.height=208;c.setAttribute('role','img');c.setAttribute('aria-label',n+' 예시 확대');
+    const tg=zoomTargets(s)[0];cropTo(c,s.canvas,tg.cx,tg.cy,tg.side,s.type!=='ok');
+    const cap=document.createElement('figcaption');cap.innerHTML='<b>'+n+'</b>'+d;
+    f.appendChild(c);f.appendChild(cap);g.appendChild(f);
+  });
 }
 function select(i){
   const s=SAMPLES[i],p=pred(s);
   document.querySelectorAll('.thumb').forEach(t=>t.classList.toggle('active',+t.dataset.i===i));
   curIdx=i;
   const vc=document.getElementById('viewCanvas'),bxs=paintSample(vc,s)||[];
-  if(document.getElementById('boxToggle').checked)drawBoxes(vc,bxs);
+  if(document.getElementById('boxToggle').checked)drawBoxes(vc,bxs,BOX_LABEL[s.type]);
   const bd=document.getElementById('modeBadge');bd.textContent='학습한 모델의 실제 출력 · 합성 테스트 이미지';bd.classList.add('real');
   document.getElementById('viewName').textContent='샘플 '+s.id;
   const names=['ok','scratch','contam'];
@@ -938,9 +987,11 @@ function select(i){
     : '<div class="flag warn">신뢰도가 '+(pr==='high'?'매우 ':'')+'낮아 <b>재검사를 권장</b>합니다. ('+PRIO_TXT[pr]+')</div>';
   html+='<div class="metric">정답 라벨: <b>'+LABEL[s.type]+'</b> · 모델 예측: <b>'+LABEL[p.cls]+'</b> '+(s.type===p.cls?'(일치)':'<span style="color:#a5322a;font-weight:700">(불일치, 오분류)</span>')+'<br>합성 테스트 세트에서 고른 이미지이며, 학습에는 사용하지 않았습니다.</div>';
   document.getElementById('resultBody').innerHTML=html;
+  renderZoom(s);
 }
 document.getElementById('resultBody').innerHTML='<p style="color:var(--muted)">왼쪽에서 샘플 이미지를 선택해 보세요.</p>';
 document.getElementById('boxToggle').onchange=()=>{if(curIdx>=0)select(curIdx)};
+buildGuide();
 select(1);
 
 // ---------- batch + priority (기준 슬라이더 연동) ----------
@@ -1005,7 +1056,7 @@ function handleFile(file){
   im.onload=()=>{
     document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('active'));
     drawCover(document.getElementById('viewCanvas'),im);
-    curIdx=-1;document.getElementById('viewName').textContent='업로드: '+file.name;
+    curIdx=-1;document.getElementById('zoomBody').innerHTML='';document.getElementById('viewName').textContent='업로드: '+file.name;
     const a=classifyImage(im);URL.revokeObjectURL(url);
     showAnalysis(a);
   };
@@ -1071,7 +1122,7 @@ const INTERVIEWS=[];
   const picks=[0,1,2,5];
   const slides=picks.map(i=>{
     const s=SAMPLES[i],c=document.createElement('canvas');c.width=600;c.height=600;c.setAttribute('aria-hidden','true');
-    c.getContext('2d').drawImage(s.canvas,0,0);if(s.type!=='ok')drawBoxes(c,s.boxes);
+    c.getContext('2d').drawImage(s.canvas,0,0);if(s.type!=='ok')drawBoxes(c,s.boxes,s.type==='scratch'?'스크래치':'오염');
     stage.insertBefore(c,scan);return{c,s,p:pred(s)};
   });
   const dotsBox=document.getElementById('scDots'),pill=document.getElementById('scPill'),conf=document.getElementById('scConf'),note=document.getElementById('scNote'),hud=document.getElementById('scHud');
