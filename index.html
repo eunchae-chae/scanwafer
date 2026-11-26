@@ -957,7 +957,7 @@
   <div class="wrap">
     <span class="tag">DATASET</span>
     <h2>데이터 기반: 실제 공장 데이터 WM-811K</h2>
-    <p class="lead">이 프로젝트의 데이터 기반은 논문(Wu · Jang · Chen, 2015)에서 공개한 <b>실제 반도체 공장 데이터 WM-811K</b>(웨이퍼 맵 811,457장)입니다. 웨이퍼 맵 분류 모델은 이 데이터로 직접 학습·평가했고, 특징 설계와 평가 방식도 논문을 참고했습니다. 다만 WM-811K에는 표면 <b>사진</b>이 없어서 사진 분석 모델의 학습에는 쓸 수 없습니다. 그래서 사진용 데이터는 팀이 만든 합성 이미지로 보완했습니다.</p>
+    <p class="lead">이 프로젝트의 데이터 기반은 논문(Wu · Jang · Chen, 2015)에서 공개한 <b>실제 반도체 공장 데이터 WM-811K</b>(웨이퍼 맵 811,457장)입니다. 웨이퍼 맵 분류 모델은 이 데이터로 직접 학습·평가했고, 특징 설계와 평가 방식도 논문을 참고했습니다.</p>
 <div style="overflow-x:auto;margin:0 0 26px"><table class="tbl-sm"><tr><th>이 사이트의 모델</th><th>사용한 데이터</th><th>클래스</th><th>성능 (테스트)</th><th>데이터의 성격</th></tr>
       <tr><td><b>웨이퍼 맵 분류</b> <span class="tagv use">데이터 기반</span><br><small>분류 체험 &gt; 웨이퍼 맵 분석</small></td><td><b>WM-811K 실제 공장 데이터</b>에서 추출한 맵 5,604장</td><td>9종: Center, Donut, Edge-Loc, Edge-Ring, Loc, Random, Scratch, Near-full, none</td><td>84.2% (WM-811K 테스트 840장)</td><td>실제 공장 데이터지만 사진이 아니라 칸별 불량 지도(맵)임</td></tr>
       <tr><td><b>사진(표면 이미지) 분류</b> <span class="tagv no">합성 데이터로 보완</span><br><small>분류 체험</small></td><td>팀이 만든 <b>합성 이미지 1,500장</b> (이미지 생성기)</td><td>3종: 정상·스크래치·오염</td><td>95.1% (합성 테스트 225장)</td><td>실제 장비 이미지가 아님</td></tr></table></div>
