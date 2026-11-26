@@ -149,7 +149,7 @@
   .thumbs{grid-template-columns:repeat(4,1fr)}
   .thumb:focus-visible,.btn:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
   .tools{display:flex;align-items:center;gap:10px;margin-top:12px;color:#cfe3f4;font-size:14px;width:100%;cursor:pointer}
-  .tools input{width:18px;height:18px;accent-color:#ffd23f}
+  .tools input{width:18px;height:18px;accent-color:#e60000}
   .slider-box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-bottom:20px}
   .slider-box .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:8px;flex-wrap:wrap}
   .slider-box output{font-size:28px;font-weight:800;color:var(--blue-d)}
@@ -241,6 +241,11 @@
   .cm td.off{color:#a5322a}
   .tbl-sm{font-size:13.5px}
   .tbl-sm th,.tbl-sm td{padding:8px 12px}
+  .src-box{margin-top:20px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:12px;padding:16px 20px;font-size:14px;color:var(--muted)}
+  .src-box b{color:var(--ink)}
+  .src-box ol{margin:8px 0 8px 20px}
+  .src-box li{margin-bottom:4px}
+  .src-box p{font-size:13px;margin:6px 0 0}
 </style>
 </head>
 <body>
@@ -265,7 +270,7 @@
     <div>
       <span class="tag">WAFER · CHIP SURFACE INSPECTION</span>
       <h1>웨이퍼·칩 표면 불량,<br><em>이미지 한 장</em>으로 분류합니다</h1>
-      <p>검사장비 엔지니어와 품질 담당자를 위한 불량 이미지 분류기입니다. 이미지를 정상·스크래치·오염으로 분류하고, <b>애매한 이미지만 골라서</b> 사람에게 다시 보여 줍니다. 전부 보는 대신, 꼭 봐야 할 것만 보세요.</p>
+      <p>검사장비 엔지니어와 품질 담당자를 위한 불량 이미지 분류기입니다. 이미지를 정상·스크래치·오염으로 분류하고, <b>애매한 이미지만 골라서</b> 사람에게 다시 보여 줍니다.</p>
       <a class="btn" href="#/demo" data-route="demo">분류 체험하기</a>
       <a class="btn ghost" href="#/about/problem" data-route="about">왜 필요한가요?</a>
       <div class="badge-row">
@@ -309,7 +314,7 @@
       <a href="#/value" data-route="value"><div class="ic">05</div><h3>활용·효과</h3><p>㈜아이코어와의 연계, 도입 효과 계산기, 앞으로의 계획을 확인합니다.</p><span class="go">활용 보기 →</span></a>
     </div>
     <div class="cta">
-      <div><h3>전부 보는 대신, 꼭 봐야 할 것만</h3><p>신뢰도가 낮은 이미지만 골라서 다시 확인하는 흐름을 직접 체험해 보세요.</p></div>
+      <div><h3>지금 직접 체험해 보세요</h3><p>신뢰도가 낮은 이미지만 골라서 다시 확인하는 흐름을 직접 체험해 보세요.</p></div>
       <a class="btn" href="#/demo" data-route="demo">지금 체험하기</a>
     </div>
   </div>
@@ -380,7 +385,14 @@
           <figcaption><b>웨이퍼 전체 검사 예시</b><br>왼쪽은 원본, 오른쪽은 이상 위치와 유형(Contaminants)을 표시한 결과입니다. 사람이 이 표시를 하나씩 확인하는 부담을 줄이는 것이 목표입니다.</figcaption>
         </figure>
       </div>
-      <p class="note">※ 위 2장은 팀이 제공한 참고 자료입니다. 출처와 사용 허가는 확인이 필요합니다. 첫 번째 이미지의 Chipping(모서리 깨짐)은 현재 3클래스에 없으며, 클래스 확장 항목(로드맵 4단계)입니다.</p>
+      <div class="src-box">
+        <b>이미지 출처</b>
+        <ol>
+          <li><b>칩 표면 불량 유형 예시</b>: Guangzhou Minder-Hightech Co., Ltd., "(AOI) 웨이퍼 2D 결함 검사" 제품 소개 페이지 · <a href="https://www.minder-semicon.com/ko/automatic-optical-inspect-aoi-wafer-2d-defect-inspection" target="_blank" rel="noopener">minder-semicon.com</a></li>
+          <li><b>웨이퍼 전체 검사 예시</b>: 원 출처를 찾지 못했습니다. (구글 이미지 검색에서 동일한 이미지가 나오지 않음)</li>
+        </ol>
+        <p>이미지의 저작권은 각 원 소유자에게 있으며, 발표와 학습 목적의 참고용으로 인용했습니다. 별도의 사용 허가는 받지 않았습니다. 첫 번째 이미지의 Chipping(모서리 깨짐)은 현재 3클래스에 없으며, 클래스 확장 항목(로드맵 4단계)입니다.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -637,7 +649,7 @@
         <li>실제로 사용할 샘플 이미지와 데이터셋 (공개 WM-811K는 웨이퍼 맵 형식이라 표면 이미지와 다름)</li>
         <li>실제 장비 이미지에서의 정확도 (지금은 합성 이미지 기준 95.1%만 측정함)</li>
         <li>현장 담당자 인터뷰와 재검사 기준값</li>
-        <li>참고 이미지(칩·웨이퍼 검사 예시)의 출처와 사용 허가</li></ul></div>
+        <li>참고 이미지: 웨이퍼 전체 검사 예시의 원 출처, 그리고 두 이미지의 사용 허가</li></ul></div>
     </div>
   </div>
 </section>
@@ -653,6 +665,7 @@
     <div>
       <h3>출처</h3>
       <p>㈜아이코어 공식 사이트: <a href="http://icorecorp.com" target="_blank" rel="noopener">icorecorp.com</a></p>
+      <p style="margin-top:8px">참고 이미지: 칩 표면 불량 유형 예시는 <a href="https://www.minder-semicon.com/ko/automatic-optical-inspect-aoi-wafer-2d-defect-inspection" target="_blank" rel="noopener">Guangzhou Minder-Hightech</a>의 제품 소개 페이지에서 가져왔습니다. 웨이퍼 전체 검사 예시는 원 출처를 찾지 못했습니다.</p>
       <p style="margin-top:8px">참고 자료: <a href="https://aiegg-travel.tistory.com/entry/Kaggle-WM-Dataset%EC%9C%BC%EB%A1%9C-Wafer-Map-Defect-Pattern-%EB%B6%84%EB%A5%98-%EC%8B%A4%EC%8A%B5" target="_blank" rel="noopener">Kaggle WM 데이터셋으로 Wafer Map Defect Pattern 분류 실습 (톡발이, CC BY 4.0)</a> · <a href="https://www.kaggle.com/datasets/qingyi/wm811k-wafer-map" target="_blank" rel="noopener">WM-811K wafer map (Kaggle)</a></p>
       <p style="margin-top:8px">이 사이트의 기업 정보는 위 공식 사이트 기준이며, 아이코어 제품 목록은 해당 사이트 메인 페이지 기준입니다. 샘플 분류 결과와 기대 효과 수치는 모두 데모·가정용입니다.</p>
     </div>
@@ -898,8 +911,11 @@ SAMPLES.forEach((s,i)=>{
 });
 var curIdx=-1;
 function drawBoxes(canvas,bxs){
-  const ctx=canvas.getContext('2d');ctx.save();ctx.setLineDash([10,7]);ctx.lineWidth=3.5;ctx.strokeStyle='#ffd23f';ctx.fillStyle='#ffd23f';ctx.font='bold 22px sans-serif';
-  bxs.forEach(b=>{const x=Math.max(4,b.x),y=Math.max(30,b.y),w=Math.min(canvas.width-8-x,b.w),hh=Math.min(canvas.height-8-y,b.h);ctx.strokeRect(x,y,w,hh);ctx.fillText('불량 의심 영역',x,y-8)});
+  const ctx=canvas.getContext('2d');ctx.save();ctx.font='bold 24px sans-serif';ctx.lineJoin='round';
+  bxs.forEach(b=>{const x=Math.max(4,b.x),y=Math.max(32,b.y),w=Math.min(canvas.width-8-x,b.w),hh=Math.min(canvas.height-8-y,b.h);
+    ctx.setLineDash([]);ctx.lineWidth=7;ctx.strokeStyle='rgba(255,255,255,.85)';ctx.strokeRect(x,y,w,hh);
+    ctx.setLineDash([12,7]);ctx.lineWidth=3.5;ctx.strokeStyle='#e60000';ctx.strokeRect(x,y,w,hh);
+    ctx.setLineDash([]);ctx.lineWidth=6;ctx.strokeStyle='#ffffff';ctx.strokeText('불량 의심 영역',x,y-9);ctx.fillStyle='#e60000';ctx.fillText('불량 의심 영역',x,y-9)});
   ctx.restore();
 }
 function select(i){
