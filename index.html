@@ -307,6 +307,28 @@
   .definfo ul{padding-left:18px;color:var(--muted);font-size:14.5px}
   .definfo li{margin-bottom:6px}
   .defsrc{font-size:12.5px;color:var(--muted);margin-top:12px}
+  .srcmenu{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0 4px}
+  .srcmenu[hidden]{display:none}
+  .srcmenu button{font:inherit;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;transition:.15s}
+  .srcmenu button:hover{border-color:var(--blue);background:var(--blue-l)}
+  .srcmenu b{display:block;color:var(--blue-d);font-size:15px}
+  .srcmenu span{font-size:12.5px;color:var(--muted)}
+  @media(max-width:560px){.srcmenu{grid-template-columns:1fr}}
+  .cam-modal{position:fixed;inset:0;z-index:100;background:rgba(5,15,25,.9);display:flex;align-items:center;justify-content:center;padding:16px}
+  .cam-modal[hidden]{display:none}
+  .cam-box{width:100%;max-width:560px;background:#0d2238;border-radius:18px;padding:16px;color:#fff}
+  .cam-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .cam-x{font:inherit;background:transparent;color:#bfe0fb;border:1px solid rgba(191,224,251,.4);border-radius:99px;padding:5px 14px;cursor:pointer}
+  .cam-stage{position:relative;width:100%;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#000}
+  .cam-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .cam-stage canvas{position:absolute;inset:0;width:100%;height:100%}
+  .cam-guide{position:absolute;inset:6%;border:2px dashed rgba(255,255,255,.6);border-radius:50%;pointer-events:none}
+  .cam-live{position:absolute;left:10px;bottom:10px;background:rgba(13,34,56,.8);border:1px solid rgba(130,205,255,.4);color:#bfe0fb;font:700 12px/1 ui-monospace,Consolas,monospace;padding:7px 10px;border-radius:6px}
+  .cam-live:empty{display:none}
+  .cam-msg{font-size:13.5px;color:#bfe0fb;margin:10px 2px}
+  .cam-ctrl{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .cam-ctrl .chk{color:#fff}
+  .cam-fallback{margin-top:10px}
 </style>
 </head>
 <body>
@@ -402,7 +424,7 @@
   <div class="wrap">
     <span class="tag">DEMO</span>
     <h2>분류 데모</h2>
-    <p class="lead">두 가지로 체험할 수 있습니다. ① 합성 테스트 이미지 12장 중 하나를 선택하면 <b>우리가 학습한 모델이 실제로 계산한 결과</b>가 나오고(불량 위치 표시와 확대 이미지도 함께 보여 줍니다), ② 내 이미지를 올리면 같은 모델이 분석하고, 불량 위치와 분석 과정을 단계별로 보여 줍니다. 정답을 알려 주면 내 데이터로 쌓입니다. 단, 합성 이미지로만 학습했기 때문에 실제 사진에서는 <b>판정 보류</b>가 나올 수 있습니다.</p>
+    <p class="lead">두 가지로 체험할 수 있습니다. ① 합성 테스트 이미지 12장 중 하나를 선택하면 <b>우리가 학습한 모델이 실제로 계산한 결과</b>가 나오고(불량 위치 표시와 확대 이미지도 함께 보여 줍니다), ② 내 이미지를 <b>카메라로 찍거나 앨범·파일에서 골라</b> 올리면 같은 모델이 분석하고, 불량 위치와 분석 과정을 단계별로 보여 줍니다. 정답을 알려 주면 내 데이터로 쌓입니다. 단, 합성 이미지로만 학습했기 때문에 실제 사진에서는 <b>판정 보류</b>가 나올 수 있습니다.</p>
     <div class="guide" id="guide" aria-label="클래스 구분 방법"></div>
     <div class="demo">
       <div>
@@ -410,9 +432,16 @@
           <label class="tools"><input type="checkbox" id="boxToggle" checked> 불량 위치 표시 (정답 위치 · 생성기 기준)</label></div>
         <div class="thumbs" id="thumbs" style="margin-top:16px"></div>
         <div class="upload" id="dropZone">
-          <input type="file" id="fileInput" accept="image/*" hidden>
-          <button class="btn" id="uploadBtn" type="button">내 이미지 올려서 분석하기</button>
-          <small>이미지를 여기로 끌어놓아도 됩니다. 사진은 서버로 전송되지 않고 이 브라우저 안에서만 분석됩니다. 지원 범위는 웨이퍼 표면의 스크래치·오염입니다. 칩 모서리 깨짐(Chipping)이나 복잡한 회로 패턴은 "판정 보류"로 표시될 수 있습니다.</small>
+          <input type="file" id="fileAlbum" accept="image/*" hidden>
+          <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.webp,.bmp,.gif,.tif,.tiff" hidden>
+          <input type="file" id="fileCam" accept="image/*" capture="environment" hidden>
+          <button class="btn" id="uploadBtn" type="button" aria-haspopup="true" aria-expanded="false">내 이미지 분석하기</button>
+          <div class="srcmenu" id="srcMenu" hidden>
+            <button type="button" id="srcCam"><b>카메라</b><span>지금 찍어서 바로 분석</span></button>
+            <button type="button" id="srcAlbum"><b>앨범</b><span>저장된 사진에서 선택</span></button>
+            <button type="button" id="srcFile"><b>파일</b><span>이미지 파일 선택</span></button>
+          </div>
+          <small>이미지를 여기로 끌어놓아도 됩니다. 사진과 카메라 영상은 서버로 전송되지 않고 이 브라우저 안에서만 분석됩니다. 지원 범위는 웨이퍼 표면의 스크래치·오염입니다. 칩 모서리 깨짐(Chipping)이나 복잡한 회로 패턴은 "판정 보류"로 표시될 수 있습니다.</small>
         </div>
       </div>
       <div class="result" id="resultBox">
@@ -867,6 +896,19 @@
   </div>
 </section>
 
+<div class="cam-modal" id="camModal" role="dialog" aria-modal="true" aria-label="카메라로 웨이퍼 촬영" hidden>
+  <div class="cam-box">
+    <div class="cam-head"><b>카메라로 웨이퍼 촬영</b><button type="button" class="cam-x" id="camClose" aria-label="닫기">닫기</button></div>
+    <div class="cam-stage"><video id="camVideo" playsinline muted autoplay></video><canvas id="camOverlay" width="600" height="600"></canvas><div class="cam-guide"></div><div class="cam-live" id="camLiveTag"></div></div>
+    <p class="cam-msg" id="camMsg">웨이퍼가 사각 틀 가운데에 오도록 맞춰 주세요.</p>
+    <div class="cam-ctrl">
+      <button type="button" class="btn" id="camShot">촬영하고 분석</button>
+      <button type="button" class="btn sec" id="camFlip">앞·뒤 카메라 전환</button>
+      <label class="chk"><input type="checkbox" id="camLive" checked> 실시간 분석</label>
+    </div>
+    <div class="cam-fallback" id="camFallback" hidden><button type="button" class="btn sec" id="camNative">기본 카메라 앱으로 찍기</button></div>
+  </div>
+</div>
 <footer class="slim">ScanWafer · 2026 NI2.0 AID 해커톤 Team 4 · 대림대학교 반도체학과 · 분류 결과는 합성 이미지 기준의 학습 모델 출력입니다.</footer>
 
 <script>
@@ -1322,9 +1364,17 @@ function paintSample(canvas,s){
 }
 
 // ---------- 업로드 이미지 분석 (학습한 모델 사용) ----------
-const dz=document.getElementById('dropZone'),fi=document.getElementById('fileInput');
-document.getElementById('uploadBtn').onclick=()=>fi.click();
-fi.onchange=()=>{if(fi.files[0])handleFile(fi.files[0]);fi.value=''};
+const dz=document.getElementById('dropZone');
+(function(){
+  const $=id=>document.getElementById(id);
+  const menu=$('srcMenu'),btn=$('uploadBtn');
+  btn.onclick=()=>{const open=menu.hidden;menu.hidden=!open;btn.setAttribute('aria-expanded',open?'true':'false')};
+  const closeMenu=()=>{menu.hidden=true;btn.setAttribute('aria-expanded','false')};
+  $('srcAlbum').onclick=()=>{closeMenu();$('fileAlbum').click()};
+  $('srcFile').onclick=()=>{closeMenu();$('fileInput').click()};
+  $('srcCam').onclick=()=>{closeMenu();openCamera()};
+  ['fileAlbum','fileInput','fileCam'].forEach(id=>{const el=$(id);el.onchange=()=>{if(el.files[0])handleFile(el.files[0]);el.value=''}});
+})();
 ['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag')}));
 ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag')}));
 dz.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)handleFile(f)});
@@ -1332,19 +1382,77 @@ function handleFile(file){
   const body=document.getElementById('resultBody');
   if(!file.type.startsWith('image/')){body.innerHTML='<div class="flag warn">이미지 파일(JPG, PNG 등)만 분석할 수 있습니다.</div>';return}
   const url=URL.createObjectURL(file),im=new Image();
-  im.onload=()=>{
-    document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('active'));
-    drawCover(document.getElementById('viewCanvas'),im);
-    curIdx=-1;document.getElementById('zoomBody').innerHTML='';document.getElementById('viewName').textContent='업로드: '+file.name;
-    window.__lastName=file.name;
-    const a=classifyImage(im,true);URL.revokeObjectURL(url);
-    const held=showAnalysis(a);
-    if(!held)drawBoxes(document.getElementById('viewCanvas'),autoBoxes(a.dbg),'이상 영역');
-    renderProcess(a);renderFeedback(a,held);
-  };
+  im.onload=()=>{URL.revokeObjectURL(url);analyzeSource(im,file.name)};
   im.onerror=()=>{URL.revokeObjectURL(url);body.innerHTML='<div class="flag warn">이미지를 읽지 못했습니다. 다른 파일로 시도해 주세요.</div>'};
   im.src=url;
 }
+function analyzeSource(im,name){
+  document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('active'));
+  drawCover(document.getElementById('viewCanvas'),im);
+  curIdx=-1;document.getElementById('zoomBody').innerHTML='';document.getElementById('viewName').textContent='업로드: '+name;
+  window.__lastName=name;
+  const a=classifyImage(im,true);
+  const held=showAnalysis(a);
+  if(!held)drawBoxes(document.getElementById('viewCanvas'),autoBoxes(a.dbg),'이상 영역');
+  renderProcess(a);renderFeedback(a,held);
+  const vc=document.getElementById('viewCanvas');if(vc&&vc.scrollIntoView)vc.scrollIntoView({behavior:'smooth',block:'center'});
+}
+// ---------- 카메라 연동 ----------
+(function(){
+  const $=id=>document.getElementById(id);
+  let stream=null,facing='environment',timer=null,busy=false;
+  const off=document.createElement('canvas');off.width=off.height=360;
+  function msg(t){$('camMsg').textContent=t}
+  function stop(){if(timer){clearInterval(timer);timer=null}if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}const v=$('camVideo');v.srcObject=null;const o=$('camOverlay');o.getContext('2d').clearRect(0,0,o.width,o.height);$('camLiveTag').textContent=''}
+  window.closeCamera=function(){stop();$('camModal').hidden=true};
+  function nativeFallback(text){$('camFallback').hidden=false;if(text)msg(text)}
+  async function start(){
+    stop();
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facing},width:{ideal:1280},height:{ideal:960}},audio:false});
+    const v=$('camVideo');v.srcObject=stream;await v.play();
+    msg('웨이퍼가 점선 원 안에 가득 차도록 맞춰 주세요. 가운데 정사각형 영역이 분석됩니다.');
+    timer=setInterval(live,800);
+  }
+  window.openCamera=async function(){
+    const modal=$('camModal');$('camFallback').hidden=true;modal.hidden=false;
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){msg('이 브라우저에서는 카메라 미리보기를 쓸 수 없습니다. 아래 버튼으로 기본 카메라 앱을 열어 주세요.');nativeFallback();return}
+    msg('카메라를 켜는 중입니다... 권한을 묻는 창이 뜨면 허용해 주세요.');
+    try{await start()}
+    catch(e){
+      const n=e&&e.name;
+      if(n==='NotAllowedError'||n==='SecurityError')nativeFallback('카메라 권한이 거부되었습니다. 주소창의 카메라 아이콘에서 허용하거나, 아래 버튼으로 기본 카메라 앱을 써 주세요.');
+      else if(n==='NotFoundError'||n==='OverconstrainedError')nativeFallback('사용할 수 있는 카메라를 찾지 못했습니다. 앨범이나 파일로 이미지를 올려 주세요.');
+      else nativeFallback('카메라를 켜지 못했습니다. 아래 버튼으로 기본 카메라 앱을 써 주세요.');
+    }
+  };
+  function live(){
+    if(busy||!$('camLive').checked||$('camModal').hidden)return;
+    const v=$('camVideo');if(v.readyState<2||!v.videoWidth)return;
+    busy=true;
+    try{
+      const s=Math.min(v.videoWidth,v.videoHeight),g=off.getContext('2d');
+      g.drawImage(v,(v.videoWidth-s)/2,(v.videoHeight-s)/2,s,s,0,0,360,360);
+      const r=classifyImage(off,true),o=$('camOverlay'),og=o.getContext('2d');og.clearRect(0,0,o.width,o.height);
+      let mx=0;r.p.forEach((x,i)=>{if(x>r.p[mx])mx=i});
+      const held=r.maxz>OOD_Z||r.p[mx]<0.5;
+      if(held){$('camLiveTag').textContent='판정 보류 · 웨이퍼가 가운데 오도록 맞춰 주세요'}
+      else{$('camLiveTag').textContent=LABEL[['ok','scratch','contam'][mx]]+' '+Math.round(r.p[mx]*100)+'%';
+        if(mx!==0){const bx=autoBoxes(r.dbg);bx.forEach(b=>{og.setLineDash([]);og.lineWidth=5;og.strokeStyle='rgba(255,255,255,.85)';og.strokeRect(b.x,b.y,b.w,b.h);og.setLineDash([10,6]);og.lineWidth=3;og.strokeStyle='#e60000';og.strokeRect(b.x,b.y,b.w,b.h)})}}
+    }catch(e){}
+    busy=false;
+  }
+  $('camShot').onclick=()=>{
+    const v=$('camVideo');if(!stream||!v.videoWidth){msg('카메라가 아직 준비되지 않았습니다.');return}
+    const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;c.getContext('2d').drawImage(v,0,0);
+    window.closeCamera();analyzeSource(c,'카메라 촬영');
+  };
+  $('camFlip').onclick=async()=>{facing=facing==='environment'?'user':'environment';if(stream){try{await start()}catch(e){nativeFallback('카메라를 전환하지 못했습니다.')}}};
+  $('camClose').onclick=()=>window.closeCamera();
+  $('camModal').addEventListener('click',e=>{if(e.target===$('camModal'))window.closeCamera()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('camModal').hidden)window.closeCamera()});
+  $('camNative').onclick=()=>{window.closeCamera();$('fileCam').click()};
+  $('camLive').onchange=()=>{if(!$('camLive').checked){const o=$('camOverlay');o.getContext('2d').clearRect(0,0,o.width,o.height);$('camLiveTag').textContent=''}};
+})();
 function showAnalysis(a){
   const k=['ok','scratch','contam'];
   const badge=document.getElementById('modeBadge');badge.textContent='학습한 모델의 실제 출력 · 합성 이미지로 학습';badge.classList.add('real');
