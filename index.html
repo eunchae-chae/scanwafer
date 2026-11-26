@@ -200,6 +200,34 @@
   .hold-box{margin-top:6px;padding:16px;border-radius:12px;background:#eef3f8;color:#33495e;font-size:14.5px;line-height:1.7}
   .hold-box b{color:var(--ink)}
   .interview.planned{border-left-color:var(--line);background:#f8fbfe;box-shadow:none}
+  .showcase{justify-self:center;width:100%;max-width:430px}
+  .sc-stage{position:relative;aspect-ratio:1/1;border-radius:20px;overflow:hidden;background:#0d2238;box-shadow:0 24px 60px rgba(20,85,143,.32),0 0 0 6px rgba(255,255,255,.55)}
+  .hero .sc-stage canvas{position:absolute;inset:0;width:100%;height:100%;max-width:none;border-radius:0;box-shadow:none;opacity:0;transition:opacity .9s ease;transform:scale(1)}
+  .hero .sc-stage canvas.on{opacity:1;animation:kb 9s ease-out forwards}
+  @keyframes kb{from{transform:scale(1)}to{transform:scale(1.045)}}
+  .sc-scan{position:absolute;left:0;right:0;top:0;height:2px;z-index:2;background:linear-gradient(90deg,transparent,rgba(130,205,255,.95),transparent);box-shadow:0 0 18px rgba(130,205,255,.75);opacity:.65;animation:scan 4.5s linear infinite}
+  @keyframes scan{from{top:0}to{top:100%}}
+  .sc-hud{position:absolute;left:12px;top:12px;z-index:3;font:700 11px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:1px;color:#bfe0fb;background:rgba(13,34,56,.72);padding:7px 10px;border-radius:6px;border:1px solid rgba(130,205,255,.35)}
+  .sc-cap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:12px;min-height:56px}
+  .sc-cap .pill{font-size:14px;padding:4px 14px}
+  .sc-conf{font-weight:800;font-size:18px;color:var(--ink)}
+  .sc-note{font-size:13px;color:var(--muted);margin-left:auto}
+  .sc-note.warn{color:#8a5a00;font-weight:700}
+  .sc-ctrl{display:flex;align-items:center;gap:10px;margin-top:12px}
+  .sc-btn{font:inherit;font-size:18px;line-height:1;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--blue-d);cursor:pointer;transition:.15s}
+  .sc-btn:hover{background:var(--blue-l);border-color:var(--blue)}
+  .sc-btn:focus-visible,.sc-dot:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+  .sc-pause{width:auto;border-radius:99px;font-size:12.5px;font-weight:700;padding:0 14px;margin-left:auto}
+  .sc-dots{display:flex;gap:8px;flex:1;justify-content:center}
+  .sc-dot{position:relative;width:38px;height:6px;padding:0;border:0;border-radius:4px;background:rgba(20,85,143,.2);cursor:pointer;overflow:hidden}
+  .sc-dot::after{content:'';position:absolute;inset:0;background:var(--blue);transform:scaleX(0);transform-origin:left}
+  .sc-dot.run::after{animation:fillbar 4.5s linear forwards}
+  @keyframes fillbar{to{transform:scaleX(1)}}
+  .showcase:hover .sc-dot.run::after,.showcase:focus-within .sc-dot.run::after,.showcase.paused .sc-dot.run::after{animation-play-state:paused}
+  .showcase.static .sc-dot.active::after{animation:none;transform:scaleX(1)}
+  .hero .sc-tag{margin:10px 0 0;font-size:12.5px;color:var(--muted);text-align:center;max-width:none}
+  .hero .sc-cap .pill.hold{background:#6b7f93}
+  @media(prefers-reduced-motion:reduce){.hero .sc-stage canvas.on{animation:none}.sc-scan{display:none}.hero .sc-stage canvas{transition:none}}
 </style>
 </head>
 <body>
@@ -233,7 +261,24 @@
         <span class="badge">재검사 우선순위</span>
       </div>
     </div>
-    <canvas id="heroCanvas" width="600" height="600" role="img" aria-label="격자 패턴이 보이는 웨이퍼 표면 예시 이미지"></canvas>
+    <div class="showcase" id="showcase" role="region" aria-roledescription="carousel" aria-label="ScanWafer 분류 예시 슬라이드">
+      <div class="sc-stage">
+        <div class="sc-hud" id="scHud">SAMPLE · DEMO</div>
+        <div class="sc-scan" aria-hidden="true"></div>
+      </div>
+      <div class="sc-cap" id="scCap" aria-live="off">
+        <span class="pill" id="scPill"></span>
+        <span class="sc-conf" id="scConf"></span>
+        <span class="sc-note" id="scNote"></span>
+      </div>
+      <div class="sc-ctrl">
+        <button type="button" class="sc-btn" id="scPrev" aria-label="이전 예시">&#8249;</button>
+        <div class="sc-dots" id="scDots"></div>
+        <button type="button" class="sc-btn" id="scNext" aria-label="다음 예시">&#8250;</button>
+        <button type="button" class="sc-btn sc-pause" id="scPause" aria-label="자동 넘김 일시정지">일시정지</button>
+      </div>
+      <p class="sc-tag">예시 이미지 · 데모용 가상 결과입니다</p>
+    </div>
   </div>
 </header>
 <section id="homeFeat">
@@ -539,7 +584,6 @@ function drawWafer(canvas,type,seed){
   return boxes;
 }
 
-drawWafer(document.getElementById('heroCanvas'),'ok',7);
 drawWafer(document.getElementById('typeOk'),'ok',11);
 drawWafer(document.getElementById('typeScratch'),'scratch',23);
 drawWafer(document.getElementById('typeContam'),'contam',31);
@@ -783,6 +827,46 @@ const INTERVIEWS=[];
   };
   [i1,i2,i3].forEach(i=>i.addEventListener('input',calc));
   window.syncCalc();
+})();
+
+// ---------- 홈 화면 슬라이드 쇼케이스 ----------
+(function(){
+  const root=document.getElementById('showcase');if(!root)return;
+  const stage=root.querySelector('.sc-stage'),scan=root.querySelector('.sc-scan');
+  const picks=[0,1,2,5];
+  const slides=picks.map(i=>{
+    const s=SAMPLES[i],c=document.createElement('canvas');c.width=600;c.height=600;c.setAttribute('aria-hidden','true');
+    const bx=drawWafer(c,s.type,s.seed)||[];if(s.type!=='ok')drawBoxes(c,bx);
+    stage.insertBefore(c,scan);return{c,s,p:pred(s)};
+  });
+  const dotsBox=document.getElementById('scDots'),pill=document.getElementById('scPill'),conf=document.getElementById('scConf'),note=document.getElementById('scNote'),hud=document.getElementById('scHud');
+  var cur=0;
+  const dots=slides.map((o,i)=>{const b=document.createElement('button');b.type='button';b.className='sc-dot';b.setAttribute('aria-label',(i+1)+'번째 예시: 샘플 '+o.s.id);b.onclick=()=>show(i);b.addEventListener('animationend',e=>{if(e.animationName==='fillbar'&&i===cur&&!root.classList.contains('static'))show(cur+1)});dotsBox.appendChild(b);return b});
+  const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function show(n){
+    cur=(n+slides.length)%slides.length;
+    const o=slides[cur];
+    slides.forEach((x,i)=>x.c.classList.toggle('on',i===cur));
+    dots.forEach((d,i)=>{d.classList.remove('run');d.classList.toggle('active',i===cur);d.setAttribute('aria-current',i===cur?'true':'false')});
+    void dotsBox.offsetWidth;
+    if(!root.classList.contains('static'))dots[cur].classList.add('run');
+    pill.className='pill '+o.p.cls;pill.textContent=LABEL[o.p.cls];
+    conf.textContent=Math.round(o.p.conf*100)+'%';
+    const pr=prio(o.p.conf);
+    note.textContent=pr==='low'?'확인 불필요':PRIO_TXT[pr]+' · 신뢰도 낮음';
+    note.className='sc-note'+(pr==='low'?'':' warn');
+    hud.textContent='SAMPLE '+o.s.id+' · DEMO';
+  }
+  document.getElementById('scPrev').onclick=()=>show(cur-1);
+  document.getElementById('scNext').onclick=()=>show(cur+1);
+  const pb=document.getElementById('scPause');
+  pb.onclick=()=>{
+    if(root.classList.contains('static')){root.classList.remove('static','paused');pb.textContent='일시정지';pb.setAttribute('aria-label','자동 넘김 일시정지');show(cur)}
+    else{const p=root.classList.toggle('paused');pb.textContent=p?'재생':'일시정지';pb.setAttribute('aria-label',p?'자동 넘김 재생':'자동 넘김 일시정지')}
+  };
+  if(reduce){root.classList.add('static');pb.textContent='자동 재생';pb.setAttribute('aria-label','자동 넘김 시작')}
+  show(0);
+  window.__sc={show:show,get cur(){return cur}};
 })();
 
 // ---------- 페이지 전환 (해시 라우터) ----------
