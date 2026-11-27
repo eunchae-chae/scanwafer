@@ -181,6 +181,9 @@
   .calc .timerow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px}
   .calc .timerow input{width:78px;flex:none;margin-top:0;display:inline-block}
   .calc .timerow em{font-style:normal;color:var(--ink);font-size:14px;margin-right:6px}
+  .fixbox{background:#f1f7fd;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:15px;color:var(--ink);line-height:1.8}
+  .fixbox b{color:var(--blue-d);font-size:17px}
+  .fx-arrow{color:var(--muted);margin:0 4px}
   .calc-max{display:inline-block;color:#a5322a;background:#fde5e3;font-weight:800;font-size:13px;padding:6px 10px;border-radius:8px;white-space:nowrap}
   .calc-max[hidden]{display:none}
   .big{font-size:40px;font-weight:800;color:var(--blue-d);line-height:1.2}
@@ -713,7 +716,9 @@
           <span class="inrow"><input type="number" id="cIn1" value="1000" min="0" max="9999" step="1" inputmode="numeric"><span class="calc-max" id="cMax1" role="alert" hidden>MAX 9,999장</span></span></label>
         <div class="calc-field"><span class="calc-lab">이미지 1장을 사람이 확인하는 시간 <small style="color:var(--muted)">· 최대 23시간 59분 59초</small></span>
           <span class="timerow"><input type="number" id="cH" value="0" min="0" max="23" step="1" inputmode="numeric" aria-label="시간"><em>시간</em><input type="number" id="cM" value="0" min="0" max="59" step="1" inputmode="numeric" aria-label="분"><em>분</em><input type="number" id="cS" value="10" min="0" max="59" step="1" inputmode="numeric" aria-label="초"><em>초</em><span class="calc-max" id="cMax2" role="alert" hidden>MAX 23시간 59분 59초</span></span></div>
-        <label>사람 정밀 검사로 남는 비율 (%) <small style="color:var(--muted)">· 기본값은 합성 테스트 이미지 기준 (<span id="cBase"></span>)</small><input type="number" id="cIn3" min="0" max="100" inputmode="numeric"></label>
+        <div class="calc-field"><span class="calc-lab">AI가 거르는 비율 <small style="color:var(--muted)">· 고정값</small></span>
+          <div class="fixbox">자동 분석으로 제외 <b id="cAutoPct">-</b> <span class="fx-arrow">→</span> 사람이 정밀 확인 <b id="cHumanPct">-</b></div>
+          <small id="cBase" style="display:block;margin-top:6px"></small></div>
       </div>
       <div>
         <div style="color:var(--muted);font-size:14px">하루 사람이 확인하는 시간 절감 (가정)</div>
@@ -721,7 +726,7 @@
         <div class="res-row"><span>전부 사람이 확인할 때</span><b id="cFull">-</b></div>
         <div class="res-row"><span>필터 후 남은 이미지만 확인할 때</span><b id="cPart">-</b></div>
         <div class="res-row"><span>절감</span><b id="cSave">-</b></div>
-        <p class="note">※ 가정 기반 단순 계산입니다. "자동 분석된 결과는 맞다"는 전제이며, 분류 처리 시간과 자동 분석에 섞여 들어가는 오분류는 반영하지 않았습니다. 자동 분석의 정확도는 합성 테스트에서 약 98.8%, 더 어려운 별도 합성 샘플 1,000장에서는 약 90%였습니다(데이터·모델 > 신뢰도 향상). 입력값은 근거 자료가 없는 가정값입니다. (논문에서 사람이 이미지 한 장을 확인하는 시간은 확인하지 못했습니다.)</p>
+        <p class="note">※ 가정 기반 단순 계산입니다. "자동 분석된 결과는 맞다"는 전제이며, 분류 처리 시간과 자동 분석에 섞여 들어가는 오분류는 반영하지 않았습니다. 자동 분석의 정확도는 합성 테스트에서 약 98.8%, 더 어려운 별도 합성 샘플 1,000장에서는 약 90%였습니다(데이터·모델 > 신뢰도 향상). 입력값(이미지 수, 확인 시간)은 근거 자료가 없는 가정값입니다. (논문에서 사람이 이미지 한 장을 확인하는 시간은 확인하지 못했습니다.) 거르는 비율만 우리 모델의 측정값입니다.</p>
       </div>
     </div>
 
@@ -1796,8 +1801,8 @@ function showAnalysis(a){
 
 // ---------- 기대 효과 계산기 (가정값) ----------
 (function(){
-  const i1=document.getElementById('cIn1'),i3=document.getElementById('cIn3'),h=document.getElementById('cH'),mi=document.getElementById('cM'),se=document.getElementById('cS');
-  const MAXN=9999,MAXS=23*3600+59*60+59;
+  const i1=document.getElementById('cIn1'),h=document.getElementById('cH'),mi=document.getElementById('cM'),se=document.getElementById('cS');
+  const MAXN=9999,MAXS=23*3600+59*60+59,FIX=testStats(0.93);
   const fmt=m=>{const r=Math.round(m);if(r<60)return r.toLocaleString()+'분';return r.toLocaleString()+'분 (약 '+Math.floor(r/60).toLocaleString()+'시간 '+(r%60)+'분)'};
   function readSec(){return Math.max(0,Math.floor(+h.value||0))*3600+Math.max(0,Math.floor(+mi.value||0))*60+Math.max(0,Math.floor(+se.value||0))}
   function setSec(t){h.value=Math.floor(t/3600);mi.value=Math.floor(t%3600/60);se.value=t%60}
@@ -1809,7 +1814,7 @@ function showAnalysis(a){
     let t=readSec(),over2=t>=MAXS;
     if(t>MAXS){t=MAXS;setSec(t)}
     document.getElementById('cMax2').hidden=!over2;
-    const n=nraw,s=t,r=Math.min(100,Math.max(0,+i3.value||0))/100;
+    const n=nraw,s=t,r=FIX.flagged/FIX.n;
     const full=n*s/60,part=n*r*s/60,save=full-part;
     document.getElementById('cFull').textContent=fmt(full);
     document.getElementById('cPart').textContent=fmt(part);
@@ -1818,11 +1823,13 @@ function showAnalysis(a){
   }
   [h,mi,se].forEach(e=>e.addEventListener('change',()=>{const t=Math.min(MAXS,readSec());setSec(t);calc()}));
   window.syncCalc=function(){
-    const ts=testStats(TH),base=Math.round(ts.flagged/ts.n*100);
-    document.getElementById('cBase').textContent='합성 테스트 '+ts.n+'장 중 '+ts.flagged+'장 = '+base+'%, 자동 분석 기준과 연동';
-    i3.value=base;calc();
+    const f=v=>(v*100).toFixed(1)+'%';
+    document.getElementById('cAutoPct').textContent=f(FIX.auto/FIX.n);
+    document.getElementById('cHumanPct').textContent=f(FIX.flagged/FIX.n);
+    document.getElementById('cBase').textContent='합성 테스트 이미지 '+FIX.n+'장에서 자동 분석 기준 93%로 측정한 값입니다(자동 분석 '+FIX.auto+'장, 사람 '+FIX.flagged+'장). 논문에서 가져온 값이 아니라 우리 모델의 측정값이며, 더 어려운 이미지에서는 달라집니다. (별도 합성 샘플 1,000장에서는 자동 분석 약 61%)';
+    calc();
   };
-  [i1,i3,h,mi,se].forEach(i=>i.addEventListener('input',calc));
+  [i1,h,mi,se].forEach(i=>i.addEventListener('input',calc));
   window.syncCalc();
 })();
 
