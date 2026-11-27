@@ -488,7 +488,7 @@
     <div class="feat">
       <a href="#/demo" data-route="demo"><div class="ic">01</div><h3>분류 체험 · 필터</h3><p>이미지 한 장 또는 여러 장을 올려, 자동으로 분석할 수 있는 것과 사람이 정밀하게 볼 것으로 나눠 봅니다.</p><span class="go">체험하기 →</span></a>
       <a href="#/types" data-route="types"><div class="ic">02</div><h3>불량 유형</h3><p>3가지 클래스의 특징과 실제 검사 화면 예시를 봅니다.</p><span class="go">유형 보기 →</span></a>
-      <a href="#/results" data-route="results"><div class="ic">03</div><h3>결과 분석</h3><p>자동 분석 기준을 조절해 사람이 정밀 측정할 이미지만 남기고, 결과를 CSV로 내보냅니다.</p><span class="go">결과 보기 →</span></a>
+      <a href="#/results" data-route="results"><div class="ic">03</div><h3>결과 분석</h3><p>분류 결과를 한눈에 보고 CSV로 내보냅니다.</p><span class="go">결과 보기 →</span></a>
       <a href="#/data" data-route="data"><div class="ic">04</div><h3>데이터·모델</h3><p>직접 설계한 합성 데이터셋, 학습한 모델의 정확도와 혼동행렬를 봅니다.</p><span class="go">근거 보기 →</span></a>
       <a href="#/value" data-route="value"><div class="ic">05</div><h3>활용·효과</h3><p>㈜아이코어와의 연계, 도입 효과 계산기, 앞으로의 계획을 확인합니다.</p><span class="go">활용 보기 →</span></a>
     </div>
@@ -659,22 +659,6 @@
     <div class="actions"><button class="btn" id="csvBtn">CSV 내보내기</button></div>
     <div style="overflow-x:auto"><table id="batchTable"></table></div>
     <p class="note">※ 합성 테스트 이미지 12장에 대한 모델의 실제 출력입니다. 정답과 다른 이미지(불일치)도 그대로 보여 줍니다. 12장은 신뢰도 구간별로 골랐습니다.</p>
-  </div>
-</section>
-
-<section id="priority">
-  <div class="wrap">
-    <span class="tag">AUTO-ANALYSIS THRESHOLD</span>
-    <h2>자동 분석 기준</h2>
-    <p class="lead">신뢰도가 이 기준 이상이면 기계가 바로 분석을 끝내고 목록에서 <b>제외</b>합니다. 기준에 못 미치거나 학습 범위 밖인 이미지만 남겨 <b>사람이 정밀하게 측정</b>합니다. 슬라이더로 기준을 바꿔 보세요. 표, 요약, 아래 기대 효과 계산, 분류 체험의 대량 분류 결과가 바로 바뀝니다.</p>
-    <div class="slider-box">
-      <div class="row"><label for="th"><b>자동 분석 기준 신뢰도</b> <span style="color:var(--muted);font-size:14px">이 값 이상이면 자동 분석 완료(제외), 미만이면 사람 정밀 검사</span></label><output id="thOut" for="th">93%</output></div>
-      <input type="range" id="th" min="50" max="99" step="1" value="93" aria-label="자동 분석 기준 신뢰도">
-      <p class="info" id="thInfo"></p>
-    </div>
-    <h3 style="font-size:17px;margin:6px 0 10px">사람이 정밀하게 볼 이미지 (위 12장 중)</h3>
-    <div style="overflow-x:auto"><table id="prioTable"></table></div>
-    <p class="note">※ 기본값 93%는 검증 이미지에서 "자동 분석된 것의 정확도 98% 이상"을 목표로 골라 둔 값(92.7%)을 반올림한 것입니다. 목표 정확도는 우리가 정한 예시이고, 실제 기준은 사용 목적(허용할 오류율)에 따라 정해야 합니다. (근거: 데이터·모델 > 신뢰도 향상)</p>
   </div>
 </section>
 
@@ -881,7 +865,7 @@
       <tr><td>Radon 변환 40개, Hough 직선 개수, 노이즈 제거</td><td>쓰지 않음. 대신 8방향 비중과 고리 밀도를 썼음 (이 특징은 회전에 민감함)</td><td><span class="tagv no">미적용</span></td></tr>
       <tr><td>2단계 SVM (패턴 유무 → 8유형), 희소 유형에 큰 비용</td><td>작은 신경망(36-48-9) 하나로 9종을 한 번에. 희소 유형은 <b>클래스당 700장 상한</b>으로 균형을 맞춤</td><td><span class="tagv no">방식이 다름</span></td></tr>
       <tr><td>경계의 샘플을 전문가가 재검토하고 재학습</td><td>신뢰도가 낮은 이미지를 사람이 정밀하게 측정하고, 그 정답으로 모델을 다시 학습 (<a href="#/demo/filter" style="color:var(--blue-d)">분류 체험</a>)</td><td><span class="tagv use">같은 발상</span></td></tr>
-      <tr><td>신뢰도가 기준보다 낮으면 따로 처리</td><td>신뢰도가 자동 분석 기준(93%) 이상이면 자동 분석, 미만이면 사람 정밀 검사 (<a href="#/results/priority" style="color:var(--blue-d)">자동 분석 기준</a>)</td><td><span class="tagv use">같은 발상</span></td></tr>
+      <tr><td>신뢰도가 기준보다 낮으면 따로 처리</td><td>신뢰도가 자동 분석 기준(93%) 이상이면 자동 분석, 미만이면 사람 정밀 검사 (<a href="#/demo/filter" style="color:var(--blue-d)">분류 체험</a>)</td><td><span class="tagv use">같은 발상</span></td></tr>
     </table></div>
     <p class="note">※ 위 표의 "우리 웨이퍼 맵 모델"은 이 사이트에 들어 있는 모델의 실제 코드(특징 36개 = 구역 밀도 13 + 고리 밀도 5 + 방향 비중 8 + 큰 덩어리·전체 속성 10)를 기준으로 정리했습니다. 마지막 두 줄(사람 재검토, 신뢰도 기준)은 사진 분석·필터 쪽에 구현한 것이고, 논문과 "발상이 같다"는 뜻이지 논문의 방법을 그대로 구현했다는 뜻은 아닙니다.</p>
 
@@ -1572,17 +1556,9 @@ function renderBatch(){
    '<div class="stat"><b style="color:var(--contam)">'+cnt.contam+'</b><span>오염으로 분류</span></div>';
   document.getElementById('batchTable').innerHTML='<tr><th>이미지</th><th>정답</th><th>모델 예측</th><th>정답 여부</th><th>신뢰도</th><th>처리</th></tr>'+rows.map(r=>
    '<tr><td>'+r.id+'</td><td>'+LABEL[r.truth]+'</td><td><span class="dot" style="background:'+COLOR[r.cls]+'"></span>'+LABEL[r.cls]+'</td><td>'+okMark(r)+'</td><td>'+Math.round(r.conf*100)+'%</td><td><span class="prio '+r.pr+'">'+PRIO_TXT[r.pr]+'</span></td></tr>').join('');
-  const sorted=rows.filter(r=>r.pr!=='low').sort((a,b)=>a.conf-b.conf);
-  document.getElementById('prioTable').innerHTML='<tr><th>순위</th><th>이미지</th><th>정답</th><th>모델 예측</th><th>신뢰도</th><th>처리</th></tr>'+(sorted.length?sorted.map((r,i)=>
-   '<tr><td>'+(i+1)+'</td><td>'+r.id+'</td><td>'+LABEL[r.truth]+'</td><td><span class="dot" style="background:'+COLOR[r.cls]+'"></span>'+LABEL[r.cls]+' '+(r.truth===r.cls?'':'<span style="color:#a5322a;font-weight:700">(오분류)</span>')+'</td><td>'+Math.round(r.conf*100)+'%</td><td><span class="prio '+r.pr+'">'+PRIO_TXT[r.pr]+'</span></td></tr>').join(''):'<tr><td colspan="6" style="color:var(--muted)">사람이 정밀하게 볼 이미지가 없습니다. 모두 자동 분석되었습니다.</td></tr>');
-  document.getElementById('thOut').textContent=Math.round(TH*100)+'%';
-  const ts=testStats(TH);
-  const autoRows=rows.filter(r=>r.pr==='low'),autoWrong=autoRows.filter(r=>r.truth!==r.cls).length;
-  document.getElementById('thInfo').innerHTML='위 12장에서는 <b>'+autoRows.length+'장이 자동 분석 완료</b>(그중 오분류 '+autoWrong+'장), <b>'+redo+'장이 사람 정밀 검사 대상</b>입니다. 모델이 틀린 '+wrong+'장 중 '+wrongCaught+'장이 사람 쪽에 남습니다.<br>합성 테스트 이미지 전체 '+ts.n+'장 기준으로는 <b>'+ts.auto+'장('+(ts.auto/ts.n*100).toFixed(1)+'%)을 사람 없이 자동 분석</b>하고 그 정확도는 <b>'+(ts.autoAcc*100).toFixed(1)+'%</b>입니다. 사람이 정밀하게 볼 이미지는 '+ts.flagged+'장('+(ts.flagged/ts.n*100).toFixed(1)+'%)이고, 모델이 틀린 '+ts.errs+'장 중 '+ts.caught+'장이 여기에 모입니다. 기준을 높이면 자동 분석은 더 정확해지지만 사람이 볼 이미지가 늘어납니다.';
   if(window.syncCalc)window.syncCalc();
   if(window.updFunnel)window.updFunnel();
 }
-document.getElementById('th').addEventListener('input',e=>{TH=+e.target.value/100;if(window.fltSetTh)window.fltSetTh(TH);renderBatch();if(curIdx>=0)select(curIdx)});
 renderBatch();
 document.getElementById('csvBtn').onclick=()=>{
   const csv='\uFEFF이미지,정답,모델예측,정답여부,신뢰도(%),처리\n'+rows.map(r=>[r.id,LABEL[r.truth],LABEL[r.cls],r.truth===r.cls?'일치':'불일치',Math.round(r.conf*100),PRIO_TXT[r.pr]].join(',')).join('\n');
@@ -2262,13 +2238,13 @@ fillFilterStats();
     home:{title:'홈',subs:[]},
     demo:{title:'분류 체험',subs:[['demo','분류 체험'],['wafermap','웨이퍼 맵 분석']]},
     types:{title:'불량 유형',subs:[['types','불량 유형']]},
-    results:{title:'결과 분석',subs:[['batch','배치 결과 + CSV'],['priority','자동 분석 기준']]},
+    results:{title:'결과 분석',subs:[['batch','배치 결과 + CSV']]},
     data:{title:'데이터·모델',subs:[['dataset','데이터셋 설계'],['model','모델·성능'],['trust','신뢰도 향상 (논문 적용)'],['wmpaper','WM-811K 논문 적용'],['process','불량 잡는 과정']]},
     value:{title:'활용·효과',subs:[['icore','아이코어 연계'],['impact','효과·로드맵']]},
     about:{title:'프로젝트',subs:[['problem','문제 정의'],['limits','한계와 확인 필요'],['team','팀·출처']]}
   };
   var focusTabs=false;
-  const allSecs=['problem','demo','filter','trust','wmpaper','wafermap','types','batch','priority','dataset','model','process','icore','impact','limits','team'];
+  const allSecs=['problem','demo','filter','trust','wmpaper','wafermap','types','batch','dataset','model','process','icore','impact','limits','team'];
   const tabsWrap=document.getElementById('subtabsWrap'),tabs=document.getElementById('subtabs');
   const homeView=document.querySelector('[data-view="home"]');
   allSecs.forEach(id=>{const s=document.getElementById(id);if(s)s.style.display='none'});
