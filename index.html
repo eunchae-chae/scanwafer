@@ -676,7 +676,7 @@
     <h2>배치 결과 요약 + CSV</h2>
     <p class="lead">여러 장을 한 번에 분류했다고 가정한 결과 요약입니다. 결과는 CSV로 내려받을 수 있습니다.</p>
     <div class="summary s5" id="summary"></div>
-    <p class="note" style="margin-top:-8px;margin-bottom:18px">신뢰도가 기준(분류 체험의 자동 분석 기준) 이상인 이미지는 기계가 분류한 결과(A, B, C)로 세고, 기준에 못 미치는 이미지는 분류하지 않고 정밀 검사 필요(D)로만 셉니다. 그래서 A+B+C+D가 전체 이미지 수와 같습니다.</p>
+    <p class="note" style="margin-top:-8px;margin-bottom:18px">신뢰도가 기준(분류 체험의 자동 분석 기준) 이상인 이미지는 기계가 분류한 결과(정상, 스크래치, 오염)로 세고, 기준에 못 미치는 이미지는 분류하지 않고 정밀 검사 필요로만 셉니다. 그래서 정상, 스크래치, 오염, 정밀 검사 필요의 합이 전체 이미지 수와 같습니다.</p>
     <div class="actions"><button class="btn" id="dlNeedBtn">정밀 검사 필요한 샘플만 다운로드 (ZIP)</button> <button class="btn ghost" id="csvBtn">CSV 내보내기</button></div>
     <div style="overflow-x:auto"><table id="batchTable"></table></div>
     <p class="note">※ 합성 테스트 이미지 12장에 대한 모델의 실제 출력입니다. 정답과 다른 이미지(불일치)도 그대로 보여 줍니다. 12장은 신뢰도 구간별로 골랐습니다.</p>
@@ -1600,11 +1600,11 @@ function renderBatch(){
     const c={ok:0,scratch:0,contam:0};rows.forEach(r=>{if(r.pr==='low')c[r.cls]++});
     const A=c.ok,B=c.scratch,C=c.contam,D=redo,T=A+B+C+D;
     document.getElementById('summary').innerHTML=
-     '<div class="stat"><b style="color:var(--ok)">'+A+'</b><span>정상 분류 (A)</span></div>'+
-     '<div class="stat"><b style="color:var(--scratch)">'+B+'</b><span>스크래치 분류 (B)</span></div>'+
-     '<div class="stat"><b style="color:var(--contam)">'+C+'</b><span>오염 분류 (C)</span></div>'+
-     '<div class="stat"><b style="color:#e0584d">'+D+'</b><span>정밀 검사 필요 (D)</span></div>'+
-     '<div class="stat"><b>'+T+'</b><span>전체 이미지 (A+B+C+D)<br>'+A+' + '+B+' + '+C+' + '+D+'</span></div>';
+     '<div class="stat"><b>'+T+'</b><span>전체 이미지</span></div>'+
+     '<div class="stat"><b style="color:var(--ok)">'+A+'</b><span>정상으로 분류</span></div>'+
+     '<div class="stat"><b style="color:var(--scratch)">'+B+'</b><span>스크래치로 분류</span></div>'+
+     '<div class="stat"><b style="color:var(--contam)">'+C+'</b><span>오염으로 분류</span></div>'+
+     '<div class="stat"><b style="color:#e0584d">'+D+'</b><span>정밀 검사 필요</span></div>';
   })();
   document.getElementById('batchTable').innerHTML='<tr><th>이미지</th><th>정답</th><th>모델 예측</th><th>정답 여부</th><th>신뢰도</th><th>처리</th></tr>'+rows.map(r=>
    '<tr><td>'+r.id+'</td><td>'+LABEL[r.truth]+'</td><td><span class="dot" style="background:'+COLOR[r.cls]+'"></span>'+LABEL[r.cls]+'</td><td>'+okMark(r)+'</td><td>'+Math.round(r.conf*100)+'%</td><td><span class="prio '+r.pr+'">'+PRIO_TXT[r.pr]+'</span></td></tr>').join('');
