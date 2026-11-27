@@ -64,7 +64,12 @@
   .thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   .thumb{background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px;cursor:pointer;transition:.15s;text-align:center;font-size:12px;color:var(--muted)}
   .thumb{position:relative}
-  .thumb .tl.need{color:#e0584d}
+  .pill.need{background:#e0584d;color:#fff}
+  .est{color:var(--muted);font-size:14px;margin:2px 0 10px}
+  .est b{color:var(--ink)}
+  .why{margin-top:16px;padding:14px 16px;border-radius:10px;background:#fff0ee;border:1px solid #f3c6c1;font-size:14px;color:#5e1d17;line-height:1.6}
+  .why ol{margin:8px 0 0 18px;padding:0}
+  .why li{margin-bottom:8px}
   .thumb:hover{border-color:var(--blue)}
   .thumb.active{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-l)}
   .thumb canvas{width:100%;border-radius:8px;display:block;margin-bottom:4px}
@@ -1468,7 +1473,7 @@ SAMPLES.forEach((s,i)=>{
   paintSample(c,s);d.setAttribute('role','button');d.tabIndex=0;d.setAttribute('aria-label','샘플 '+s.id+' 선택');d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(i)}};
   d.onclick=()=>select(i);thumbs.appendChild(d);
 });
-function updThumbBadges(){SAMPLES.forEach((s,i)=>{const t=thumbs.children[i];if(!t)return;const tl=t.querySelector('.tl');if(!tl)return;const p=pred(s);if(prio(p.conf)==='low'){tl.className='tl '+p.cls;tl.textContent=LABEL[p.cls]}else{tl.className='tl need';tl.textContent='정밀 검사 필요'}})}
+function updThumbBadges(){}
 var curIdx=-1;
 const BOX_LABEL={scratch:'스크래치 (정답)',contam:'오염 (정답)',ok:''};
 function drawBoxes(canvas,bxs,label){
@@ -1531,6 +1536,25 @@ function renderProcess(r){
   const idxs=[2,5,14,3,17,11],tb=document.getElementById('procFeat');
   tb.innerHTML='<tr><th>모델이 보는 단서 (19개 중 6개)</th><th>이 이미지의 값</th></tr>'+idxs.map(i=>'<tr><td>'+FEAT_NAMES[i]+'</td><td>'+(+r.f[i]).toFixed(2)+'</td></tr>').join('');
 }
+function reviewInfo(pv,maxz){
+  const NM=['ok','scratch','contam'],idx=[0,1,2].sort((a,b)=>pv[b]-pv[a]),c1=idx[0],c2=idx[1],conf=pv[c1];
+  if(!(maxz>OOD_Z||conf<TH))return null;
+  const ts=testStats(TH),fAcc=ts.flagged?(ts.flagged-ts.caught)/ts.flagged:1,items=[];
+  const josa=(w)=>{const c=w.charCodeAt(w.length-1)-0xAC00;return(c>=0&&c%28!==0)?'으로':'로'};
+  if(conf<TH)items.push('<b>신뢰도가 기준보다 낮습니다.</b> 기계의 1위 추정은 '+LABEL[NM[c1]]+' '+Math.round(conf*100)+'%로, 자동 분석 기준 '+Math.round(TH*100)+'%에 못 미칩니다. 합성 테스트에서 신뢰도가 이 기준 미만이었던 '+ts.flagged+'장은 정확도가 '+(fAcc*100).toFixed(0)+'%였고, 기준 이상은 '+(ts.autoAcc*100).toFixed(1)+'%였습니다. 자신 없을 때의 답은 틀릴 가능성이 더 큽니다.');
+  const gap=Math.round((pv[c1]-pv[c2])*100);
+  items.push(gap<40?'<b>1위와 2위의 차이가 작습니다.</b> '+LABEL[NM[c1]]+' '+Math.round(pv[c1]*100)+'% · '+LABEL[NM[c2]]+' '+Math.round(pv[c2]*100)+'% (차이 '+gap+'%p). 기계가 어느 쪽인지 확정하기 어렵습니다.':'<b>2위 후보도 남아 있습니다.</b> '+LABEL[NM[c1]]+' '+Math.round(pv[c1]*100)+'% · '+LABEL[NM[c2]]+' '+Math.round(pv[c2]*100)+'% (차이 '+gap+'%p). 차이는 있지만 자동으로 확정하기에는 부족합니다.');
+  if(c1===0)items.push('<b>정상으로 추정했어도 확신이 낮으면 놓친 불량이 있을 수 있습니다.</b> 불량을 정상으로 잘못 넘기는 것이 가장 위험하기 때문에, 정상이라는 답도 확신이 낮으면 사람이 눈으로 확인합니다.');
+  else items.push('<b>'+LABEL[NM[c1]]+josa(LABEL[NM[c1]])+' 추정했지만 확신이 낮습니다.</b> 정상이거나 다른 유형일 수 있어서, 사람이 정밀하게 측정해 확정합니다.');
+  if(maxz>OOD_Z)items.push('<b>학습한 이미지와 특징이 크게 다릅니다.</b> 특징값이 학습 데이터 범위를 표준편차의 '+maxz.toFixed(1)+'배 벗어났습니다(기준 '+OOD_Z+'배). 모르는 유형의 이미지일 수 있습니다.');
+  return{c1:c1,conf:conf,items:items};
+}
+function needHtml(r,pv){
+  let h='<div class="verdict"><span class="pill need">정밀 검사 필요</span></div><div class="est">기계의 추정 (확정 아님): <b>'+LABEL[['ok','scratch','contam'][r.c1]]+'</b> '+Math.round(r.conf*100)+'%</div>';
+  ['ok','scratch','contam'].forEach((n,k)=>{h+='<div class="bar"><div class="lab"><span>'+LABEL[n]+'</span><span>'+Math.round(pv[k]*100)+'%</span></div><div class="track"><div class="fill" style="width:'+(pv[k]*100)+'%;background:'+COLOR[n]+'"></div></div></div>'});
+  h+='<div class="why"><b>왜 정밀 검사가 필요한가요?</b><ol>'+r.items.map(x=>'<li>'+x+'</li>').join('')+'</ol></div>';
+  return h;
+}
 function select(i){
   const s=SAMPLES[i],p=pred(s);
   document.querySelectorAll('.thumb').forEach(t=>t.classList.toggle('active',+t.dataset.i===i));
@@ -1540,18 +1564,20 @@ function select(i){
   const bd=document.getElementById('modeBadge');bd.textContent='학습한 모델의 실제 출력 · 합성 테스트 이미지';bd.classList.add('real');
   document.getElementById('viewName').textContent='샘플 '+s.id;
   const names=['ok','scratch','contam'];
-  let html='<div class="verdict"><span class="pill '+(p.cls==='contam'?'contam':p.cls)+'">'+LABEL[p.cls]+'</span><span style="font-size:22px;font-weight:800">'+Math.round(p.conf*100)+'%</span><span style="color:var(--muted);font-size:14px">신뢰도</span></div>';
-  names.forEach((n,k)=>{
-    html+='<div class="bar"><div class="lab"><span>'+LABEL[n]+'</span><span>'+Math.round(s.p[k]*100)+'%</span></div><div class="track"><div class="fill" style="width:'+(s.p[k]*100)+'%;background:'+COLOR[n]+'"></div></div></div>';
-  });
-  const pr=prio(p.conf);
-  html+= pr==='low'
-    ? '<div class="flag good"><b>자동 분석 완료.</b> 신뢰도가 기준 이상이라 기계가 바로 결과를 확정하고, 사람이 볼 목록에서 제외합니다.</div>'
-    : '<div class="flag warn"><b>사람 정밀 검사로 넘깁니다.</b> 기계가 확정하기에는 신뢰도가 기준보다 낮아서, 이 이미지만 남깁니다.</div>';
+  const aa=classifyImage(s.canvas),rv=reviewInfo(s.p,aa.maxz);
+  let html;
+  if(rv){html=needHtml(rv,s.p)}
+  else{
+    html='<div class="verdict"><span class="pill '+(p.cls==='contam'?'contam':p.cls)+'">'+LABEL[p.cls]+'</span><span style="font-size:22px;font-weight:800">'+Math.round(p.conf*100)+'%</span><span style="color:var(--muted);font-size:14px">신뢰도</span></div>';
+    names.forEach((n,k)=>{
+      html+='<div class="bar"><div class="lab"><span>'+LABEL[n]+'</span><span>'+Math.round(s.p[k]*100)+'%</span></div><div class="track"><div class="fill" style="width:'+(s.p[k]*100)+'%;background:'+COLOR[n]+'"></div></div></div>';
+    });
+    html+='<div class="flag good"><b>자동 분석 완료.</b> 신뢰도가 기준 이상이라 기계가 바로 결과를 확정하고, 사람이 볼 목록에서 제외합니다.</div>';
+  }
   html+='<div class="metric">정답 라벨: <b>'+LABEL[s.type]+'</b> · 모델 예측: <b>'+LABEL[p.cls]+'</b> '+(s.type===p.cls?'(일치)':'<span style="color:#a5322a;font-weight:700">(불일치, 오분류)</span>')+'<br>합성 테스트 세트에서 고른 이미지이며, 학습에는 사용하지 않았습니다.</div>';
   document.getElementById('resultBody').innerHTML=html;
   renderZoom(s);
-  renderProcess(classifyImage(s.canvas));
+  renderProcess(aa);
   const fb=document.getElementById('feedbackBody');if(fb)fb.innerHTML='';
 }
 document.getElementById('resultBody').innerHTML='<p style="color:var(--muted)">왼쪽에서 샘플 이미지를 선택해 보세요.</p>';
@@ -1806,6 +1832,8 @@ function showAnalysis(a){
     body.innerHTML='<div class="verdict"><span class="pill hold">판정 보류</span></div><div class="hold-box">'+hold+'<br><br><b>사람이 직접 확인해 주세요.</b> 이 모델은 합성 웨이퍼 이미지로만 학습했고, 실제 장비 이미지에서의 정확도는 검증되지 않았습니다.</div>';
     return true;
   }
+  const rv2=reviewInfo(a.p,a.maxz);
+  if(rv2){body.innerHTML=needHtml(rv2,a.p)+'<div class="flag warn">합성 이미지로 학습한 모델이라 실제 사진에서는 <b>참고용</b>입니다.</div>';return false}
   const cls=k[mx],conf=a.p[mx];
   let html='<div class="verdict"><span class="pill '+cls+'">'+LABEL[cls]+'</span><span style="font-size:22px;font-weight:800">'+Math.round(conf*100)+'%</span><span style="color:var(--muted);font-size:14px">신뢰도</span></div>';
   k.forEach((n,i)=>{html+='<div class="bar"><div class="lab"><span>'+LABEL[n]+'</span><span>'+Math.round(a.p[i]*100)+'%</span></div><div class="track"><div class="fill" style="width:'+(a.p[i]*100)+'%;background:'+COLOR[n]+'"></div></div></div>'});
